@@ -6,7 +6,7 @@ Fetches posts and comments from Reddit using:
   2. Optionally, the official API via PRAW (if installed + credentials provided)
 
 Usage:
-    python reddit_scraper.py                         # Interactive mode
+    python reddit_scraper.py                         # Auto-fetch AI in Education data
     python reddit_scraper.py -s python -l 10         # Top 10 from r/python
     python reddit_scraper.py -s python -c hot -l 5   # Hot 5 from r/python
     python reddit_scraper.py -s python --comments     # Include top comments
@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import subprocess
 import sys
 import time
@@ -32,13 +33,44 @@ USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 )
 BASE_URL = "https://www.reddit.com"
-REQUEST_DELAY = 1.5  # seconds between requests; need adjust abit if it doesnt work on ur sys 
+REQUEST_DELAY = 5  # seconds between requests; need adjust abit if it doesnt work on ur sys
+
+# ── AI in Education — Subreddits & Search Queries ────────────────────────────
+
+AI_EDUCATION_SUBREDDITS = [
+    "artificial",
+    "education",
+    "edtech",
+    "ChatGPT",
+    "MachineLearning",
+    "learnmachinelearning",
+    "highereducation",
+    "Teachers",
+    "college",
+    "computerscience",
+    "OnlineEducation",
+    "elearning",
+]
+
+AI_EDUCATION_SEARCH_QUERIES = [
+    "AI in education",
+    "artificial intelligence education",
+    "AI tutoring",
+    "ChatGPT classroom",
+    "AI learning tools",
+    "machine learning education",
+    "AI academic integrity",
+    "AI personalized learning",
+]
+
+OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "crawled_data")
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 
-def fetch_json(url: str) -> dict | None:
+def fetch_json(url: str, _retries: int = 0) -> dict | None:
     """Fetch JSON from a URL using curl (bypasses TLS fingerprinting blocks)."""
+    max_retries = 3
     try:
         result = subprocess.run(
             ["curl", "-s", "-w", "\n%{http_code}", "--max-time", "15",
@@ -54,9 +86,13 @@ def fetch_json(url: str) -> dict | None:
         body = parts[0] if len(parts) == 2 else result.stdout
         status = int(parts[1]) if len(parts) == 2 else 0
         if status == 429:
-            print("⚠  Rate limited by Reddit. Waiting 10 seconds...")
-            time.sleep(10)
-            return fetch_json(url)
+            if _retries >= max_retries:
+                print(f"⚠  Rate limited {max_retries} times, skipping: {url}")
+                return None
+            wait = 10 * (_retries + 1)
+            print(f"⚠  Rate limited by Reddit. Waiting {wait} seconds... (retry {_retries + 1}/{max_retries})")
+            time.sleep(wait)
+            return fetch_json(url, _retries + 1)
         if status >= 400:
             print(f"⚠  HTTP {status} for: {url}")
             return None
@@ -235,6 +271,120 @@ def save_to_json(posts: list[dict], filename: str) -> None:
     print(f"✅ Saved {len(posts)} posts to {filename}")
 
 
+# ── Auto-fetch: AI in Education ──────────────────────────────────────────────
+
+
+def auto_fetch_ai_education(
+    posts_per_subreddit: int = 25,
+    posts_per_query: int = 25,
+    include_comments: bool = True,
+    comments_per_post: int = 5,
+) -> list[dict]:
+    """
+    Automatically fetch Reddit data related to "AI in Education".
+
+    Output format matches the other crawled_data CSVs:
+        source, url, question_title, answer_text, scraped_at
+
+    Each post's selftext becomes one row, and each comment becomes its own
+    row (same pattern Quora uses for multiple answers per question).
+
+    Steps:
+        1. Scrapes relevant subreddits (hot + top/month).
+        2. Runs search queries across Reddit.
+        3. Deduplicates by post ID.
+        4. Optionally fetches top comments per post.
+        5. Saves everything to crawled_data/redditcrawl.csv.
+    """
+    seen_ids: set[str] = set()
+    all_posts: list[dict] = []
+
+    def _collect(posts: list[dict]) -> None:
+        for p in posts:
+            if p["id"] not in seen_ids:
+                seen_ids.add(p["id"])
+                all_posts.append(p)
+
+    # ── 1. Subreddit browsing ────────────────────────────────────────────
+    for sub in AI_EDUCATION_SUBREDDITS:
+        for category, time_filter in [("hot", "week"), ("top", "month")]:
+            print(f"  Fetching r/{sub}/{category} (t={time_filter}) ...")
+            posts = get_subreddit_posts(sub, category, posts_per_subreddit, time_filter)
+            _collect(posts)
+            time.sleep(REQUEST_DELAY)
+
+    # ── 2. Search queries ────────────────────────────────────────────────
+    for query in AI_EDUCATION_SEARCH_QUERIES:
+        print(f"  Searching: \"{query}\" ...")
+        results = search_reddit(query, limit=posts_per_query)
+        for r in results:
+            if r.get("permalink"):
+                post_id = r["permalink"].rstrip("/").split("/")[-2] if "/comments/" in r["permalink"] else ""
+                if post_id and post_id not in seen_ids:
+                    seen_ids.add(post_id)
+                    all_posts.append({
+                        "id": post_id,
+                        "title": r.get("title", ""),
+                        "permalink": r["permalink"],
+                        "selftext": "",
+                        "subreddit": r.get("subreddit", ""),
+                    })
+        time.sleep(REQUEST_DELAY)
+
+    print(f"\n  Collected {len(all_posts)} unique posts.")
+
+    # ── 3. Build rows in the shared schema ───────────────────────────────
+    # Format: source, url, question_title, answer_text, scraped_at
+    scraped_at = datetime.now(tz=timezone.utc).isoformat()
+    rows: list[dict] = []
+
+    for i, p in enumerate(all_posts):
+        title = p.get("title", "")
+        url = p.get("permalink", "")
+
+        # Row for the post's own selftext (if any)
+        selftext = p.get("selftext", "").strip()
+        if selftext:
+            rows.append({
+                "source": "reddit",
+                "url": url,
+                "question_title": title,
+                "answer_text": selftext,
+                "scraped_at": scraped_at,
+            })
+
+        # Rows for each comment
+        if include_comments:
+            comments = get_post_comments(url, limit=comments_per_post)
+            for c in comments:
+                body = c.get("body", "").strip()
+                if body:
+                    rows.append({
+                        "source": "reddit",
+                        "url": url,
+                        "question_title": title,
+                        "answer_text": body,
+                        "scraped_at": scraped_at,
+                    })
+            if (i + 1) % 20 == 0:
+                print(f"    ... processed {i + 1}/{len(all_posts)} posts")
+            time.sleep(REQUEST_DELAY)
+
+    # ── 4. Save to CSV ───────────────────────────────────────────────────
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    out_path = os.path.join(OUTPUT_DIR, "redditcrawl.csv")
+
+    fieldnames = ["source", "url", "question_title", "answer_text", "scraped_at"]
+
+    with open(out_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print(f"\n  Saved {len(rows)} rows ({len(all_posts)} posts) to {out_path}")
+    return rows
+
+
 # ── CLI ──────────────────────────────────────────────────────────────────────
 
 
@@ -264,57 +414,30 @@ Examples:
     parser.add_argument("--search", help="Search Reddit for a query instead of browsing")
     parser.add_argument("--save", choices=["csv", "json"], help="Save results to a file")
     parser.add_argument("--show-text", action="store_true", help="Show self-text preview for posts")
+    parser.add_argument(
+        "--auto", action="store_true",
+        help="Auto-fetch AI in Education data from predefined subreddits & queries",
+    )
+    parser.add_argument(
+        "--no-comments", action="store_true",
+        help="Skip fetching comments in auto mode (faster)",
+    )
     return parser
-
-
-def interactive_mode():
-    """Run in interactive mode when no arguments are provided."""
-    print("=" * 50)
-    print("  Reddit Data Fetcher — Interactive Mode")
-    print("=" * 50)
-
-    subreddit = input("\nSubreddit (e.g. python): ").strip().lstrip("r/")
-    if not subreddit:
-        print("No subreddit provided. Exiting.")
-        return
-
-    category = input("Category [hot/new/top/rising] (default: hot): ").strip() or "hot"
-    limit = int(input("Number of posts (default: 10): ").strip() or "10")
-    fetch_comments = input("Fetch comments too? [y/N]: ").strip().lower() == "y"
-
-    print(f"\nFetching {limit} {category} posts from r/{subreddit}...")
-    posts = get_subreddit_posts(subreddit, category, limit)
-
-    if not posts:
-        print("No posts found.")
-        return
-
-    print_posts(posts, show_text=True)
-
-    if fetch_comments:
-        for p in posts:
-            print(f"\n💬 Comments for: {truncate(p['title'], 60)}")
-            time.sleep(REQUEST_DELAY)
-            comments = get_post_comments(p["permalink"])
-            p["comments"] = comments
-            if comments:
-                print_comments(comments)
-            else:
-                print("  (no comments)")
-
-    save = input("\nSave results? [csv/json/N]: ").strip().lower()
-    if save in ("csv", "json"):
-        filename = f"reddit_{subreddit}_{category}.{save}"
-        (save_to_csv if save == "csv" else save_to_json)(posts, filename)
 
 
 def main():
     parser = build_parser()
     args = parser.parse_args()
 
-    # If no arguments provided, run interactive mode
-    if len(sys.argv) == 1:
-        interactive_mode()
+    # If no arguments provided or --auto flag, run auto AI-in-Education fetch
+    if len(sys.argv) == 1 or args.auto:
+        print("=" * 60)
+        print("  Reddit Data Fetcher — AI in Education (Auto Mode)")
+        print("=" * 60)
+        print(f"\n  Subreddits: {', '.join(AI_EDUCATION_SUBREDDITS)}")
+        print(f"  Search queries: {len(AI_EDUCATION_SEARCH_QUERIES)}")
+        print(f"  Comments: {'off' if args.no_comments else 'on'}\n")
+        auto_fetch_ai_education(include_comments=not args.no_comments)
         return
 
     # Search mode
