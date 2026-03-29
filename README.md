@@ -163,10 +163,127 @@ Both files use the same unified schema (`id, source, url, title, text, date`) an
 
 ---
 
+## Search Engine
+
+### Technology Stack
+
+| Component | Technology |
+|-----------|------------|
+| Search backend | Apache Solr 9 (Docker) |
+| Web framework | Flask (Python) |
+| Sentiment analysis | VADER (vaderSentiment) |
+| Visualizations | matplotlib, WordCloud |
+| Solr client | pysolr |
+
+### Features
+
+- **Full-text search** with Solr-powered query parsing and relevance ranking
+- **Query highlighting** — matching terms are highlighted in result snippets
+- **Multifaceted search** — filter results by source (Reddit, YouTube, Twitter, Quora) and sentiment (positive, negative, neutral) via interactive sidebar facets
+- **Timeline search** — filter results by date range
+- **Sentiment analysis** — each document is scored at index time using VADER, with a compound score and positive/negative/neutral label displayed per result
+- **Sentiment pie chart** — shows the sentiment distribution across all matching results
+- **Source bar chart** — shows the source distribution across all matching results
+- **Word cloud** — generated from the text of the current page of results
+- **Pagination** — results are paginated (10 per page) with previous/next navigation
+- **Synonym expansion** — query-time synonyms (e.g. AI/artificial intelligence, ML/machine learning) defined in `solr/configset/conf/synonyms.txt`
+- **Custom stopwords** — common filler words removed at index time via `solr/configset/conf/stopwords.txt`
+- **Responsive design** — sidebar collapses on mobile screens
+
+### How to Run
+
+#### Prerequisites
+
+- **Docker** (with Docker Compose)
+- **Python 3.8+**
+- Python packages: `pip install pysolr vaderSentiment flask matplotlib wordcloud`
+
+#### Step 1: Start Solr
+
+```bash
+docker compose up -d
+```
+
+This pulls the Solr 9 image (first time only), creates the `opinions` core with the custom schema and config from `solr/configset/`, and exposes Solr at **http://localhost:8983**.
+
+Wait a few seconds for Solr to fully start, then verify:
+
+```bash
+curl http://localhost:8983/solr/opinions/admin/ping
+```
+
+You should see `"status":"OK"`.
+
+#### Step 2: Index the corpus
+
+```bash
+python tools/index_solr.py
+```
+
+This reads `data/final_corpus/corpus_balanced_1to1.csv`, computes VADER sentiment for each record, and indexes 28,664 documents into Solr in batches.
+
+#### Step 3: Start the web app
+
+```bash
+python app/app.py
+```
+
+Open **http://localhost:5001** in your browser.
+
+#### Stopping
+
+```bash
+# Stop the Flask app with Ctrl+C
+# Stop Solr
+docker compose down
+```
+
+---
+
+## Solr Configuration
+
+The custom Solr configset lives in `solr/configset/conf/`:
+
+| File | Purpose |
+|------|---------|
+| `schema.xml` | Defines fields (id, source, url, title, text, date, sentiment, sentiment_score) and the `text_general` field type with standard tokenization, stopword removal, lowercase, and synonym expansion |
+| `solrconfig.xml` | Configures the search handler with highlighting and faceting defaults, auto-commit settings, and the ping endpoint |
+| `synonyms.txt` | Query-time synonyms (AI/artificial intelligence, ML/machine learning, etc.) |
+| `stopwords.txt` | Custom stopwords removed during indexing |
+
+### Indexed Document Schema
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique document identifier |
+| `source` | string | Origin platform (Reddit, YouTube, Twitter, Quora) |
+| `url` | string | Link to original content |
+| `title` | text_general | Post/question title |
+| `text` | text_general | Opinion text (full-text indexed) |
+| `date` | pdate | Publication date |
+| `sentiment` | string | VADER label: positive, negative, or neutral |
+| `sentiment_score` | pfloat | VADER compound score (-1.0 to 1.0) |
+
+---
+
 ## Project Structure
 
 ```
 informationRetrieval/
+├── app/                        # Flask web application
+│   ├── app.py                  # Main Flask app with search, charts, word cloud
+│   ├── static/
+│   │   └── style.css           # Responsive CSS styles
+│   └── templates/
+│       ├── index.html          # Landing page with search box and advanced filters
+│       └── results.html        # Results page with facets, charts, pagination
+├── solr/                       # Solr configuration
+│   └── configset/conf/
+│       ├── schema.xml          # Field definitions and text analysis chain
+│       ├── solrconfig.xml      # Request handlers, highlighting, faceting
+│       ├── synonyms.txt        # Query-time synonym mappings
+│       └── stopwords.txt       # Custom stopwords
+├── docker-compose.yml          # Solr 9 container definition
 ├── data/
 │   ├── crawled/                # Raw crawled CSV datasets
 │   │   ├── quoracrawl.csv
@@ -187,12 +304,13 @@ informationRetrieval/
 │   ├── Xscraper.py
 │   ├── linkedinscrap.py
 │   └── reddit_scraper.py
-├── tools/                      # Post-processing utilities
+├── tools/                      # Post-processing & indexing utilities
 │   ├── reddit_filter.py
 │   ├── reddit_format.py
 │   ├── consolidate_corpus.py
 │   ├── check_relevance.py
 │   ├── check_sentiment.py
-│   └── balance_corpus.py
+│   ├── balance_corpus.py
+│   └── index_solr.py           # Indexes balanced corpus into Solr with VADER sentiment
 └── Assignment.pdf
 ```

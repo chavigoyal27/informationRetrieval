@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  solr:
+    image: solr:9
+    container_name: solr_opinions
+    ports:
+      - "8983:8983"
+    volumes:
+      - solr_data:/var/solr
+      - ./solr/configset:/opt/solr/configsets/opinions
+    command: >
+      bash -c "
+        precreate-core opinions /opt/solr/configsets/opinions &&
+        solr-foreground
+      "
+
+volumes:
+  solr_data:

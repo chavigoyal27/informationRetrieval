@@ -1,0 +1,6 @@
+# Synonym mappings for AI opinion corpus
+AI, artificial intelligence
+ML, machine learning
+LLM, large language model
+GPT, generative pre-trained transformer
+chatbot, chat bot

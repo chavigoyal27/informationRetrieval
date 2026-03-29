@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Opinions Search Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="landing">
+        <h1>AI Opinions Search Engine</h1>
+        <p class="subtitle">Search 28,664 opinions about AI from Reddit, YouTube, Twitter, and Quora</p>
+
+        <form action="/search" method="GET" class="search-form-landing">
+            <div class="search-box-landing">
+                <input type="text" name="q" placeholder="Search opinions about AI..." autofocus>
+                <button type="submit">Search</button>
+            </div>
+
+            <details class="advanced-filters">
+                <summary>Advanced Filters</summary>
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Sources:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="source" value="Reddit"> Reddit</label>
+                            <label><input type="checkbox" name="source" value="YouTube"> YouTube</label>
+                            <label><input type="checkbox" name="source" value="Twitter"> Twitter</label>
+                            <label><input type="checkbox" name="source" value="Quora"> Quora</label>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sentiment">Sentiment:</label>
+                        <select name="sentiment" id="sentiment">
+                            <option value="">All</option>
+                            <option value="positive">Positive</option>
+                            <option value="negative">Negative</option>
+                            <option value="neutral">Neutral</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date Range:</label>
+                        <div class="date-range">
+                            <input type="date" name="date_from" placeholder="From">
+                            <span>to</span>
+                            <input type="date" name="date_to" placeholder="To">
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </form>
+
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ query }} - AI Opinions Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Top search bar -->
+    <header class="topbar">
+        <a href="/" class="logo">AI Opinions</a>
+        <form action="/search" method="GET" class="search-form-top">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search...">
+            {% for s in active_sources %}
+            <input type="hidden" name="source" value="{{ s }}">
+            {% endfor %}
+            {% if active_sentiment %}
+            <input type="hidden" name="sentiment" value="{{ active_sentiment }}">
+            {% endif %}
+            {% if date_from %}
+            <input type="hidden" name="date_from" value="{{ date_from }}">
+            {% endif %}
+            {% if date_to %}
+            <input type="hidden" name="date_to" value="{{ date_to }}">
+            {% endif %}
+            <button type="submit">Search</button>
+        </form>
+    </header>
+
+    <div class="results-layout">
+        <!-- Sidebar with facets and filters -->
+        <aside class="sidebar">
+            <form action="/search" method="GET" id="facet-form">
+                <input type="hidden" name="q" value="{{ query }}">
+
+                <!-- Source facets -->
+                <div class="facet-section">
+                    <h3>Source</h3>
+                    {% for source, count in source_facets.items() %}
+                    <label class="facet-item">
+                        <input type="checkbox" name="source" value="{{ source }}"
+                               {% if source in active_sources %}checked{% endif %}
+                               onchange="this.form.submit()">
+                        <span class="facet-label">{{ source }}</span>
+                        <span class="facet-count">({{ count }})</span>
+                    </label>
+                    {% endfor %}
+                </div>
+
+                <!-- Sentiment facets -->
+                <div class="facet-section">
+                    <h3>Sentiment</h3>
+                    <select name="sentiment" onchange="this.form.submit()">
+                        <option value="">All Sentiments</option>
+                        {% for sent, count in sentiment_facets.items() %}
+                        <option value="{{ sent }}" {% if sent == active_sentiment %}selected{% endif %}>
+                            {{ sent|capitalize }} ({{ count }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Date range filter -->
+                <div class="facet-section">
+                    <h3>Date Range</h3>
+                    <div class="date-inputs">
+                        <label>From:
+                            <input type="date" name="date_from" value="{{ date_from }}"
+                                   onchange="this.form.submit()">
+                        </label>
+                        <label>To:
+                            <input type="date" name="date_to" value="{{ date_to }}"
+                                   onchange="this.form.submit()">
+                        </label>
+                    </div>
+                    {% if date_from or date_to %}
+                    <a href="/search?q={{ query }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}"
+                       class="clear-link">Clear dates</a>
+                    {% endif %}
+                </div>
+
+                {% if active_sources or active_sentiment or date_from or date_to %}
+                <div class="facet-section">
+                    <a href="/search?q={{ query }}" class="clear-all">Clear All Filters</a>
+                </div>
+                {% endif %}
+            </form>
+        </aside>
+
+        <!-- Main content -->
+        <main class="results-main">
+            <!-- Query stats -->
+            <div class="query-stats">
+                <span>{{ total_hits }} results for "<strong>{{ query }}</strong>"</span>
+                <span class="query-time">Query time: {{ query_time }} ms</span>
+            </div>
+
+            <!-- Charts section -->
+            {% if sentiment_chart or source_chart or wordcloud_img %}
+            <details class="charts-section" open>
+                <summary>Visualizations</summary>
+                <div class="charts-grid">
+                    {% if sentiment_chart %}
+                    <div class="chart">
+                        <img src="data:image/png;base64,{{ sentiment_chart }}" alt="Sentiment Distribution">
+                    </div>
+                    {% endif %}
+                    {% if source_chart %}
+                    <div class="chart">
+                        <img src="data:image/png;base64,{{ source_chart }}" alt="Source Distribution">
+                    </div>
+                    {% endif %}
+                    {% if wordcloud_img %}
+                    <div class="chart chart-wide">
+                        <img src="data:image/png;base64,{{ wordcloud_img }}" alt="Word Cloud">
+                    </div>
+                    {% endif %}
+                </div>
+            </details>
+            {% endif %}
+
+            <!-- Results list -->
+            <div class="results-list">
+                {% for doc in docs %}
+                <div class="result-item">
+                    <div class="result-header">
+                        <h3 class="result-title">
+                            {% if doc.url %}
+                            <a href="{{ doc.url }}" target="_blank" rel="noopener">{{ doc.title }}</a>
+                            {% else %}
+                            {{ doc.title }}
+                            {% endif %}
+                        </h3>
+                        <div class="result-badges">
+                            <span class="badge badge-source badge-{{ doc.source|lower }}">{{ doc.source }}</span>
+                            <span class="badge badge-sentiment badge-{{ doc.sentiment }}">
+                                {{ doc.sentiment }} ({{ "%.2f"|format(doc.sentiment_score) }})
+                            </span>
+                        </div>
+                    </div>
+                    {% if doc.date %}
+                    <div class="result-date">{{ doc.date[:10] }}</div>
+                    {% endif %}
+                    <p class="result-snippet">{{ doc.snippet|safe }}</p>
+                    {% if doc.url %}
+                    <a class="result-url" href="{{ doc.url }}" target="_blank" rel="noopener">{{ doc.url[:80] }}{% if doc.url|length > 80 %}...{% endif %}</a>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="no-results">
+                    <p>No results found for "<strong>{{ query }}</strong>".</p>
+                    <p>Try a different query or remove some filters.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if total_pages > 1 %}
+            <div class="pagination">
+                {% if page > 1 %}
+                <a href="/search?q={{ query }}&page={{ page - 1 }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">&laquo; Previous</a>
+                {% endif %}
+
+                <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
+
+                {% if page < total_pages %}
+                <a href="/search?q={{ query }}&page={{ page + 1 }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">Next &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>
