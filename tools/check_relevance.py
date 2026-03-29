@@ -6,7 +6,7 @@ it mentions at least one AI keyword AND at least one education keyword.
 
 Outputs:
   - Per-source and overall relevance stats
-  - Saves off-topic rows to crawled_data/off_topic.csv for review
+  - Saves off-topic rows to data/analysis/off_topic.csv for review
   - Prints a sample of off-topic records for manual inspection
 
 Usage:
@@ -21,8 +21,8 @@ import random
 csv.field_size_limit(10 ** 7)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_FILE = os.path.join(BASE_DIR, "crawled_data", "master_corpus.csv")
-OUTPUT_FILE = os.path.join(BASE_DIR, "crawled_data", "off_topic.csv")
+INPUT_FILE = os.path.join(BASE_DIR, "data", "analysis", "master_corpus.csv")
+OUTPUT_FILE = os.path.join(BASE_DIR, "data", "analysis", "off_topic.csv")
 
 # ── Keywords ─────────────────────────────────────────────────────────────────
 

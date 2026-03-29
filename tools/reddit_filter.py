@@ -1,7 +1,7 @@
 """
 Reddit CSV Filter — AI in Education
 ====================================
-Reads crawled_data/redditcrawl.csv and keeps only rows relevant to
+Reads data/crawled/redditcrawl.csv and keeps only rows relevant to
 "AI in Education" based on keyword matching.
 
 Usage:
@@ -19,8 +19,8 @@ import re
 import sys
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_INPUT = os.path.join(SCRIPT_DIR, "..", "crawled_data", "redditcrawl.csv")
-DEFAULT_OUTPUT = os.path.join(SCRIPT_DIR, "..", "crawled_data", "redditcrawl_filtered.csv")
+DEFAULT_INPUT = os.path.join(SCRIPT_DIR, "..", "data", "crawled", "redditcrawl.csv")
+DEFAULT_OUTPUT = os.path.join(SCRIPT_DIR, "..", "data", "crawled", "redditcrawl_filtered.csv")
 
 # ── Keywords ─────────────────────────────────────────────────────────────────
 # A row is kept if it contains at least one AI term AND at least one Education term.

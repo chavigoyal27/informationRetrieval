@@ -10,7 +10,7 @@ balanced — not the final classifier for the project.
 Outputs:
   - Overall sentiment distribution
   - Per-source sentiment breakdown
-  - Saves results to crawled_data/sentiment_distribution.csv
+  - Saves results to data/analysis/sentiment_distribution.csv
 
 Usage:
     python tools/check_sentiment.py
@@ -23,8 +23,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 csv.field_size_limit(10 ** 7)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-INPUT_FILE = os.path.join(BASE_DIR, "crawled_data", "master_corpus.csv")
-OUTPUT_FILE = os.path.join(BASE_DIR, "crawled_data", "sentiment_distribution.csv")
+INPUT_FILE = os.path.join(BASE_DIR, "data", "analysis", "master_corpus.csv")
+OUTPUT_FILE = os.path.join(BASE_DIR, "data", "analysis", "sentiment_distribution.csv")
 
 # VADER compound score thresholds (standard cutoffs)
 POS_THRESHOLD = 0.05

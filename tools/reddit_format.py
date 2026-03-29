@@ -22,8 +22,8 @@ import re
 import sys
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_INPUT = os.path.join(SCRIPT_DIR, "..", "crawled_data", "redditcrawl.csv")
-DEFAULT_OUTPUT = os.path.join(SCRIPT_DIR, "..", "crawled_data", "redditcrawl.csv")
+DEFAULT_INPUT = os.path.join(SCRIPT_DIR, "..", "data", "crawled", "redditcrawl.csv")
+DEFAULT_OUTPUT = os.path.join(SCRIPT_DIR, "..", "data", "crawled", "redditcrawl.csv")
 
 MIN_ANSWER_LENGTH = 15  # drop rows where cleaned answer_text is shorter than this
 

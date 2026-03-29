@@ -7,7 +7,7 @@ Normalises every source to a unified schema:
 - Drops rows with empty/whitespace-only text
 - Removes exact-duplicate texts (keeps first occurrence)
 - Strips leading/trailing whitespace from all fields
-- Writes to crawled_data/master_corpus.csv
+- Writes to data/analysis/master_corpus.csv
 
 Usage:
     python tools/consolidate_corpus.py
@@ -21,8 +21,8 @@ from datetime import datetime
 csv.field_size_limit(10 ** 7)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CRAWLED_DIR = os.path.join(BASE_DIR, "crawled_data")
-OUTPUT_FILE = os.path.join(CRAWLED_DIR, "master_corpus.csv")
+CRAWLED_DIR = os.path.join(BASE_DIR, "data", "crawled")
+OUTPUT_FILE = os.path.join(BASE_DIR, "data", "analysis", "master_corpus.csv")
 
 FIELDNAMES = ["id", "source", "url", "title", "text", "date"]
 
