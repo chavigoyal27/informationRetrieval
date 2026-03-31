@@ -103,3 +103,31 @@ Our crawled corpus enables users to search for and analyze public opinions about
 | LinkedIn | 1,783 | 52,581 |
 | Quora | 1,535 | 318,848 |
 | Reddit | 444 | 40,174 |
+
+### 4.1 Evaluation
+
+We evaluated the polarity classification stage on our manually labeled evaluation dataset (`eval.xls`), which contains 1,000 records. The model achieved an overall accuracy of 0.5590. The detailed classification report is summarised below:
+
+| Class | Precision | Recall | F1-score | Support |
+|------|----------:|-------:|---------:|--------:|
+| Positive | 0.3468 | 0.4082 | 0.3750 | 147 |
+| Negative | 0.3663 | 0.6033 | 0.4559 | 184 |
+| Neutral | 0.7405 | 0.5800 | 0.6505 | 669 |
+| Macro avg | 0.4845 | 0.5305 | 0.4938 | 1000 |
+| Weighted avg | 0.6138 | 0.5590 | 0.5742 | 1000 |
+
+#### Discussion
+
+The results show that the model performs best on the neutral class. It achieved a precision of 0.7405 and an F1-score of 0.6505 for neutral records, which suggests that when the model predicts a record as neutral, it is quite often correct. However, the recall for the neutral class is only 0.5800, which means that many actually neutral records were still misclassified as positive or negative.
+
+The model performs much worse on the positive and negative classes. The F1-score for positive is 0.3750, while the F1-score for negative is 0.4559. This shows that the model has more difficulty distinguishing positive and negative opinions than identifying neutral content. This is not very surprising, because many posts in our dataset do not express sentiment in a very direct way. In discussions about AI in education, people often mention both benefits and concerns in the same sentence, so the sentiment is mixed rather than clearly positive or clearly negative.
+
+The confusion matrix helps us see this more clearly. Out of 147 actual positive records, only 60 were correctly predicted as positive, while 65 were predicted as neutral. Out of 184 actual negative records, 111 were correctly predicted, but 71 were predicted as neutral. For the neutral class, 388 out of 669 were correctly predicted, while the rest were split between positive and negative predictions. This suggests that one of the main problems in the pipeline is that opinionated texts are sometimes being treated as neutral.
+
+One likely reason for this is the design of our classification pipeline. In our system, subjectivity detection is done first using TextBlob, and only texts classified as opinionated are passed to the polarity model. This means that if a text actually contains an opinion but gets classified as neutral in the first stage, it will never be properly analysed for polarity in the next stage. Because of this, errors in subjectivity detection can directly affect the final sentiment results. 
+
+Another reason for the modest scores is that our polarity classifier was not built specifically for AI-in-education data. It is a pretrained model for general social-media sentiment, so although it is a strong baseline, it may not always handle the kinds of opinions found in our corpus. Many posts in our dataset express mixed views rather than clearly positive or clearly negative sentiment. For example, a sentence such as `AI helps with lesson planning but weakens critical thinking` contains both benefits and concerns, making it difficult to classify using only one polarity label. Similar issues also arise with short posts, sarcasm, informal language, and context-dependent opinions. Our preprocessing steps, such as removing URLs and HTML, normalizing whitespace, lowercasing text, and converting emojis into words, help reduce noise, but they still do not fully address these deeper language ambiguities.
+
+Overall, these results show that the model works reasonably well as a baseline, especially for identifying neutral content, but it is still weaker at separating positive and negative opinions. The weighted F1-score of 0.5742 is higher than the macro F1-score of 0.4938 because the dataset contains many more neutral records than positive or negative ones. This means the overall performance looks better partly because the model does better on the majority class.
+
+In summary, the evaluation suggests that the pipeline is usable for large-scale sentiment analysis, but its fine-grained polarity classification is still limited. In future work, the system could likely be improved by using a better subjectivity classifier, adjusting the subjectivity threshold, or fine-tuning the polarity model on AI-in-education data.
