@@ -143,24 +143,31 @@ def search():
 
     kwargs = {
         "q": q,
+        "defType": "edismax",
+        "qf": "title^0.5 text^4",
+        "pf": "text^8",
+        "mm": "2<75%",
         "start": start,
         "rows": RESULTS_PER_PAGE,
         "fl": "id,source,url,title,text,date,sentiment,sentiment_score",
         "fq": fq_list,
         "hl": "true",
-        "hl.fl": "text,title",
-        "hl.snippets": 2,
-        "hl.fragsize": 200,
+        "hl.fl": "text",
+        "hl.snippets": 1,              # 🔥 ONLY ONE snippet
+        "hl.fragsize": 300,            # 🔥 bigger, cleaner context
+        "hl.mergeContiguous": "true",  # 🔥 prevents overlap duplication
+        "hl.method": "unified",        # 🔥 better snippet quality
         "hl.simple.pre": "<mark>",
         "hl.simple.post": "</mark>",
-        "facet": "true",
-        "facet.field": ["source", "sentiment"],
-        "facet.mincount": 1,
     }
 
     # Execute search with timing
     t0 = time.time()
     results = solr.search(**kwargs)
+
+    # Extract Solr QTime (IMPORTANT)
+    solr_qtime = results.raw_response["responseHeader"]["QTime"]
+
     query_time = round((time.time() - t0) * 1000, 2)
 
     total_hits = results.hits
@@ -180,10 +187,9 @@ def search():
         doc_id = doc.get("id", "")
         hl = highlighting.get(doc_id, {})
         snippet = ""
-        if "text" in hl:
-            snippet = " ... ".join(hl["text"])
-        elif "title" in hl:
-            snippet = " ... ".join(hl["title"])
+
+        if hl.get("text"):
+            snippet = hl["text"][0]
         else:
             text = doc.get("text", "")
             snippet = text[:300] + "..." if len(text) > 300 else text
@@ -213,6 +219,7 @@ def search():
         docs=docs,
         total_hits=total_hits,
         query_time=query_time,
+        solr_qtime=solr_qtime,
         page=page,
         total_pages=total_pages,
         source_facets=source_facets,

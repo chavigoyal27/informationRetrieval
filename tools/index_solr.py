@@ -9,7 +9,7 @@ import csv
 import sys
 import time
 from datetime import datetime
-
+import re
 import pysolr
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
@@ -35,7 +35,21 @@ def parse_date(date_str):
             continue
     return None
 
+def clean_for_dedup(t):
+    t = t.lower()
+    t = re.sub(r"#\w+", "", t)        # remove hashtags
+    t = re.sub(r"[^\w\s]", "", t)     # remove punctuation
+    t = re.sub(r"\s+", " ", t).strip()
+    return t
 
+def is_title_like(text, title):
+    if not text or not title:
+        return False
+    
+    t1 = clean_for_dedup(text)
+    t2 = clean_for_dedup(title)
+
+    return t1 == t2
 def main():
     print("Connecting to Solr...")
     solr = pysolr.Solr(SOLR_URL, always_commit=False, timeout=30)
@@ -63,16 +77,35 @@ def main():
     total = 0
     indexed = 0
     skipped = 0
+    seen_texts = set()
 
     with open(CORPUS_PATH, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             total += 1
             text = row.get("text", "").strip()
+            title = row.get("title", "").strip()
+
+            # ❌ skip empty text
             if not text:
                 skipped += 1
                 continue
 
+            # 🔥 NEW FIX: skip title-as-comment
+            if is_title_like(text, title):
+                skipped += 1
+                continue
+            
+            if len(text.split()) < 4:
+                skipped += 1
+                continue
+            clean_text = clean_for_dedup(text)
+
+            if clean_text in seen_texts:
+                skipped += 1
+                continue
+
+            seen_texts.add(clean_text)
             # Compute VADER sentiment
             scores = analyzer.polarity_scores(text)
             compound = scores["compound"]

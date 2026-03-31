@@ -24,16 +24,19 @@
     <lst name="defaults">
       <str name="echoParams">explicit</str>
       <str name="df">text</str>
+      <str name="qf">title^2 text</str>
+      <str name="pf">title^3 text^2</str>
       <int name="rows">10</int>
 
       <!-- Highlighting -->
+      
       <str name="hl">true</str>
       <str name="hl.fl">text,title</str>
       <int name="hl.snippets">2</int>
       <int name="hl.fragsize">200</int>
       <str name="hl.simple.pre">&lt;mark&gt;</str>
       <str name="hl.simple.post">&lt;/mark&gt;</str>
-
+        
       <!-- Faceting -->
       <str name="facet">true</str>
       <str name="facet.field">source</str>
