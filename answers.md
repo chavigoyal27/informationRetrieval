@@ -104,7 +104,37 @@ Our crawled corpus enables users to search for and analyze public opinions about
 | Quora | 1,535 | 318,848 |
 | Reddit | 444 | 40,174 |
 
-### 4.1 Evaluation
+
+## Question 4:
+
+### 4.1 Motivation (Classification Approach)
+To accurately capture the public opinion regarding AI in education, we implemented a three-stage classification pipeline. The pipeline uses rule-based Natural Language Processing, followed by state-of-the-art transformer models to maximize accuracy while also maximising performance.
+
+| Stage | Process | Tool/Model | Primary Objective |
+| :--- | :--- | :--- | :--- |
+| **1** | **Subjectivity** | `TextBlob` | Filter objective facts from subjective opinions. |
+| **2** | **Polarity** | `Twitter-RoBERTa` | Classify opinions as Positive, Negative, or Neutral. |
+| **3** | **Emotion** | `DistilRoBERTa` | Map text to education-relevant emotional traits. |
+
+**Stage 1 (Subjectivity Detection):** We utilise **TextBlob**, a rule-based heuristic to filter records into neutral or opinionated categories. We used a low subjectivity threshold to ensure the latter models only process records with a statistically significant likelihood of cointaining sentiment. Processing all records using deep learning tools is computationally expensive and inefficient as irrelevant data needs to be processed. Thus, TextBlob is used to filter out objective statements and only pass down subjective content, marking them as opinionated.
+
+**Stage 2 (Polarity Detection):** For the opinionated text, we utilize a HuggingFace Transformer model (`cardiffnlp/twitter-roberta-base-sentiment-latest`). This is a RoBERTa architecture pre-trained on ~124 million tweets. We chose a Twitter-specific model because it represents the current state of the art for social media sentiment. It understands modern text syntax, internet slang etc. significantly better than older algorithms like Naive Bayes, SVMs, or standard BERT.
+
+**Stage 3 (Emotion Detection):** For further depth, we pass the opinionated texts through a second transformer (`j-hartmann/emotion-english-distilroberta-base`). The output is then mapped to education-relevant emotional categories, enabling more sophisticated multifaceted filtering in our search engine UI.
+
+
+### 4.2 Preprocessing (Microtext Normalization)
+
+Before classification, we normalized the raw text data. Text on social media platforms are riddled with emojis, URLs, random capitalization, and broken HTML tags. If left as it is, this noise degrades transformer tokenization and introduces out-of-vocabulary errors.
+
+Our preprocessing steps include:
+- **Emoji-to-Text:** We convert emojis into plain text tokens using the emoji library, preserving the semantic meaning
+- **Noise Removal:** We strip URLs via Regex and remove lingering HTML tags.
+- **Normalization:** We lowercase all text and collapse multi-line whitespace into single spaces to ensure consistent padding.
+- **Length Truncation:** We constrain text to ~512 words to satisfy the hard token-length limits of RoBERTa architectures, preventing crashes on excessively long Quora answers or Reddit comments.
+
+
+### 4.3 Evaluation
 
 We evaluated the polarity classification stage on our manually labeled evaluation dataset (`eval.xls`), which contains 1,000 records. The model achieved an overall accuracy of 0.5590. The detailed classification report is summarised below:
 
@@ -131,3 +161,17 @@ Another reason for the modest scores is that our polarity classifier was not bui
 Overall, these results show that the model works reasonably well as a baseline, especially for identifying neutral content, but it is still weaker at separating positive and negative opinions. The weighted F1-score of 0.5742 is higher than the macro F1-score of 0.4938 because the dataset contains many more neutral records than positive or negative ones. This means the overall performance looks better partly because the model does better on the majority class.
 
 In summary, the evaluation suggests that the pipeline is usable for large-scale sentiment analysis, but its fine-grained polarity classification is still limited. In future work, the system could likely be improved by using a better subjectivity classifier, adjusting the subjectivity threshold, or fine-tuning the polarity model on AI-in-education data.
+
+### 4.4 Random Accuracy Test
+
+From the eval records, it shows a imbalanced dataset (Neutral: 669, Negative: 184, Positive: 147). A Proportional Random Baseline model that guesses randomly on this distribution would get an expected accuracy of (0.669×0.669)+(0.184×0.184)+(0.147×0.147) = 50.3%.
+
+Our model acheieved an accuracy of 55.9%, which outperforms the proportional random baseline 50.3% and also outperforms a uniform random guessing basline 33.3%(3 categories). 
+
+To ensure the model did not overfit to the 1,000 records, we performed a random accuracy test on the rest of the data.
+
+On the remaining 28,000+ unlabelled records, we extracted a random sample of 30 records from the final output and manually evaluated the model's predictions. The model correctly classified 27 out of 30 records, yielding a random sample accuracy of 90%. This confirms that our evaluation metrics are working well and even improves when deployed over the rest of the corpus.
+
+### 4.5 Performance Metrics
+
+#TODO (What exactly are we measuring here? How long it takes to process xxx corpus? Does it slow down/crash under heavy load?)

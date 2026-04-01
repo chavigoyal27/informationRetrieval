@@ -1,0 +1,221 @@
+============================================================
+RANDOM ACCURACY TEST SAMPLE (n=30)
+============================================================
+
+[1]
+Text: Thos AI detectors are absolute crap. I put some to the test recently. I am in nursing school and wrote a patient symptom summary recently and ran it through the checks. It was never matter-of-fact wri...
+Subjectivity: opinionated (0.4)
+Polarity: negative (0.9028)
+Emotion: anger (0.4777)
+Human Evaluation: Correct
+
+[2]
+Text: Einstein AI tool doesn't just help with homework. It takes over your role as a student https://t.co/PwMAYqWxUE
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Incorrect (Negative)
+
+[3]
+Text: I am hearing that some writing teachers are using it to show what formulaic bad writing is and also about critical thinking. The teachers create papers and the students have to verify whether the fund...
+Subjectivity: opinionated (0.3979)
+Polarity: negative (0.5499)
+Emotion: excitement (0.428)
+Human Evaluation: Incorrect (Fact)
+
+[4]
+Text: Classrooms of the future may be equipped with cameras monitored by AI's that observe the students. During lectures it can tell which students are paying attention, which may be struggling to understan...
+Subjectivity: opinionated (0.425)
+Polarity: neutral (0.7748)
+Emotion: neutral (0.7383)
+Human Evaluation: Correct
+
+[5]
+Text: Thank you sir. I'm 73, former computer hardware service guy, mainframes, workstations,etc. Intrigued.
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Correct
+
+[6]
+Text: really cool idea, thanks for sharing
+Subjectivity: opinionated (0.425)
+Polarity: positive (0.9681)
+Emotion: excitement (0.8454)
+Human Evaluation: Correct
+
+[7]
+Text: My schools says you can submit on turnitin multiple times until the final day of submission. Tho I had initial plagiarism score of 6% I had to make some corrections to my work and hyperindex my refere...
+Subjectivity: opinionated (0.5)
+Polarity: negative (0.7903)
+Emotion: concern (0.7541)
+Human Evaluation: Correct
+
+[8]
+Text: My dad's bucket list included riding a camel around the Great Pyramids of Egypt. (retired architect) Sora says they won't use my photo...I want the photo to become life, a moving camel with dad on it,...
+Subjectivity: opinionated (0.8833)
+Polarity: neutral (0.5168)
+Emotion: excitement (0.9849)
+Human Evaluation: Correct
+
+[9]
+Text: 13:01 oh my god i didn't know that is really dangerous ,i remembered my classmate has that shoes..
+Subjectivity: opinionated (0.9)
+Polarity: negative (0.8902)
+Emotion: excitement (0.8774)
+Human Evaluation: Correct
+
+[10]
+Text: Gyan sabhi ko kahata hai ki Satya ka Sadupayog ❤
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Correct (Unknown Language)
+
+[11]
+Text: I feel so bad for the teacher❤❤❤
+Subjectivity: opinionated (0.6667)
+Polarity: negative (0.9212)
+Emotion: concern (0.9908)
+Human Evaluation: Correct
+
+[12]
+Text: 3月7日デイリーレポート 今日やること ・普段検索しないカテゴリの素材集め ・Psで画像修正(初講座の復習) ・DLしたフォントを使ってバナー作成 #fammスクール https://t.co/hvmOi1iNBU
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Correct (Langauge)
+
+[13]
+Text: Hey are you a teacher/lecturer? Can I talk to you about how your students are using AI in the classroom? I'm making a video about AI's impact on education, human brains, and some things we could do in...
+Subjectivity: opinionated (0.3933)
+Polarity: neutral (0.7838)
+Emotion: concern (0.9605)
+Human Evaluation: Correct
+
+[14]
+Text: 1:40 back to bluebook 😂
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Correct
+
+[15]
+Text: CEOs are using ai to try and get out of their contracts they signed. Did they sign a contract they knew they shouldn't or did they mess up so badly that only ai can daydream a way they might get out o...
+Subjectivity: opinionated (0.6139)
+Polarity: negative (0.7879)
+Emotion: neutral (0.4471)
+Human Evaluation: Correct
+
+[16]
+Text: 2:56 - I already had AI teacher assistants for the past two years. AI reworded the professors' convoluted directions on assignments for me.
+Subjectivity: opinionated (0.25)
+Polarity: neutral (0.7666)
+Emotion: excitement (0.5667)
+Human Evaluation: Correct
+
+[17]
+Text: University UK British counsil. physical campuses on Indian soil. Key Highlights: * The Scale: Eight more UK universities (including Liverpool, York, and Aberdeen) are following the University of South...
+Subjectivity: opinionated (0.3738)
+Polarity: neutral (0.8045)
+Emotion: neutral (0.3814)
+Human Evaluation: Correct
+
+[18]
+Text: Wow, it's such a disaster that a simple google search shows that the students are scoring in the 98th and 99th percentile, 10 news schools have been opened, including in Miami and Brownsville, and it'...
+Subjectivity: opinionated (0.5526)
+Polarity: negative (0.9227)
+Emotion: excitement (0.9758)
+Human Evaluation: Correct
+
+[19]
+Text: Say NO to AI
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Incorrect (Negative)
+
+[20]
+Text: He had me till the part about burnout being "relaxing"
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Correct
+
+[21]
+Text: @Legauche Acho provável que um um dia algum LLM seja capaz de ensinar as pessoas a ler e a escrever em qualquer lugar e qualquer hora com a paciência que um professor não teria.
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Correct
+
+[22]
+Text: cleanessay always passes Turnitin like nothing, super reliable
+Subjectivity: opinionated (0.6667)
+Polarity: positive (0.9277)
+Emotion: excitement (0.5045)
+Human Evaluation: Correct
+
+[23]
+Text: Use a Plagiarism Detection Tool: The first step in removing AI plagiarism is to use a plagiarism detection tool that can detect similarities between two pieces of content. ... Rewrite the Content: ......
+Subjectivity: opinionated (0.3333)
+Polarity: neutral (0.8179)
+Emotion: neutral (0.9545)
+Human Evaluation: Correct
+
+[24]
+Text: In my latest blog, I explore both sides of the story — the opportunities AI brings to education and the doubts teachers are quietly facing.
+Subjectivity: opinionated (0.6167)
+Polarity: neutral (0.8156)
+Emotion: concern (0.8192)
+Human Evaluation: Correct
+
+[25]
+Text: Cheaters gonna cheat! People should also understand that you have to change with the times! There has always been trouble trying to get a job after college!
+Subjectivity: opinionated (0.2)
+Polarity: negative (0.8451)
+Emotion: anger (0.3522)
+Human Evaluation: Correct
+
+[26]
+Text: AI is a tool created by humans, so anything it demonstrates will by extension be something humans have "Learned". The Apollo 11 mission to the moon isn't viewed as an achievement for the Apollo 11 roc...
+Subjectivity: opinionated (0.2121)
+Polarity: neutral (0.6864)
+Emotion: neutral (0.9139)
+Human Evaluation: Correct
+
+[27]
+Text: Raj Shamani's channel
+Subjectivity: neutral (0.0)
+Polarity: neutral (0.0)
+Emotion: neutral (0.0)
+Human Evaluation: Correct
+
+[28]
+Text: The AI is here to stay, but the role of the teacher seems far from over— indeed the role is getting more interesting and nuanced.
+Subjectivity: opinionated (0.6667)
+Polarity: positive (0.8597)
+Emotion: excitement (0.4356)
+Human Evaluation: Correct
+
+[29]
+Text: I think there is a difference to have AI write a complete response with out input from the sender and providing the input that is then polished by AI. As a business owner it doesn’t feel any different...
+Subjectivity: opinionated (0.5)
+Polarity: neutral (0.7415)
+Emotion: excitement (0.9224)
+Human Evaluation: Correct
+
+[30]
+Text: STOP SPEAKING FOR DISSABLED OR LESS GIFTED PEOPLE
+Subjectivity: opinionated (0.5333)
+Polarity: negative (0.8828)
+Emotion: neutral (0.5955)
+Human Evaluation: Correct
+
+============================================================
+HUMAN EVALUATION SUMMARY
+============================================================
+Total Sampled: 30
+Correctly Classified: 27
+Incorrectly Classified: 3
+Random Accuracy: 90%
