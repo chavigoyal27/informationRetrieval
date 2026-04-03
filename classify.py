@@ -29,13 +29,13 @@ Output:
 import argparse
 import csv
 import os
-import re
 import time
 
-import emoji
 import pandas as pd
 from textblob import TextBlob
 from transformers import pipeline
+
+from preprocess import preprocess
 
 csv.field_size_limit(10 ** 7)
 
@@ -45,42 +45,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CORPUS_FILE = os.path.join(BASE_DIR, "data", "final_corpus", "corpus_balanced_1to1.csv")
 EVAL_FILE   = os.path.join(BASE_DIR, "data", "final_corpus", "eval.xls")
 OUTPUT_FILE = os.path.join(BASE_DIR, "data", "analysis", "classification_results.csv")
-
-# ── Preprocessing ─────────────────────────────────────────────────────────────
-
-def preprocess(text: str, max_tokens: int = 512) -> str:
-    """
-    Clean text for classification:
-      - Convert emojis to text tokens (e.g. 🔥 → ':fire:')
-      - Remove URLs
-      - Lowercase
-      - Collapse whitespace
-      - Truncate to max_tokens words (RoBERTa hard limit)
-    """
-    if not text:
-        return ""
-
-    # Convert emojis to text
-    text = emoji.demojize(text, delimiters=(" ", " "))
-
-    # Remove URLs
-    text = re.sub(r"https?://\S+", "", text)
-
-    # Remove HTML tags
-    text = re.sub(r"<[^>]+>", "", text)
-
-    # Lowercase
-    text = text.lower()
-
-    # Collapse whitespace
-    text = re.sub(r"\s+", " ", text).strip()
-
-    # Truncate to max_tokens words (rough approximation for RoBERTa's 512 token limit)
-    words = text.split()
-    if len(words) > max_tokens:
-        text = " ".join(words[:max_tokens])
-
-    return text
 
 
 # ── Stage 1: Subjectivity Detection ──────────────────────────────────────────
