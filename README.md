@@ -266,6 +266,17 @@ The custom Solr configset lives in `solr/configset/conf/`:
 
 ---
 
+
+### Run Advanced Sentiment Classification (Ablation Study)
+
+To test our state-of-the-art Lexical Gatekeeper and Deep Learning Ensemble (RoBERTa, BERTweet, ReviewBERT) against a baseline, run the stacked ensemble classification script:
+
+```bash
+python innovations/ensemble_classification.py
+```
+
+It compares Soft Voting vs. Logistic Regression Meta-Model Stacking, exporting the final predictions to `data/analysis/stacked_ensemble_eval.csv`.
+
 ## Project Structure
 
 ```
@@ -312,5 +323,7 @@ informationRetrieval/
 │   ├── check_sentiment.py
 │   ├── balance_corpus.py
 │   └── index_solr.py           # Indexes balanced corpus into Solr with VADER sentiment
+├── innovations/                # Advanced model ablation studies
+│   └── ensemble_classification.py # Deep learning ensemble combining RoBERTa, BERTweet, ReviewBERT
 └── Assignment.pdf
 ```

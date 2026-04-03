@@ -175,3 +175,18 @@ On the remaining 28,000+ unlabelled records, we extracted a random sample of 30 
 ### 4.5 Performance Metrics
 
 #TODO (What exactly are we measuring here? How long it takes to process xxx corpus? Does it slow down/crash under heavy load?)
+
+
+## 5. Stacking Ensemble
+
+### Deep Ensemble Ablation Study Results (On Test Set)
+
+*All models were applied after a TextBlob Subjectivity Filter (scores < 0.15 were forced to neutral).*
+
+| Model Setup | Accuracy | Note |
+| :--- | :--- | :--- |
+| **1. Subjectivity Filter + M1 (RoBERTa Twitter)** | 0.5200 (52.0%) | *Q4 Implementation Baseline* |
+| **2. Subjectivity Filter + M2 (BERTweet)** | 0.5450 (54.5%) | |
+| **3. Subjectivity Filter + M3 (ReviewBERT Forum)** | 0.4450 (44.5%) | |
+| **4. INNOVATION 1: Soft Voting Ensemble** | 0.5050 (50.5%) | |
+| **5. INNOVATION 2: Stacking Meta** | **0.6700 (67.0%)** | *State-of-the-Art result* |
