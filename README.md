@@ -6,90 +6,148 @@ An opinion search engine that crawls, indexes, and performs sentiment analysis o
 
 ---
 
-## Data Crawling
+## Data Pipeline
 
-### Sources & Methods
+The project follows a sequential pipeline where each step produces a clean output for the next:
 
-| Source | Library | Method | Records |
-|--------|---------|--------|---------|
-| Quora | Playwright (async browser automation), ftfy | Expands from 10 seed questions to 5,000 unique URLs, extracts up to 50 answers per page. Unicode normalization and deduplication applied. | 30,000 |
-| YouTube | YouTube Data API v3 (google-api-python-client) | Searches 32 targeted queries, collects up to 30 videos per query and 120 comments per video. Deduplicates by comment ID and text hash. | 30,000 |
-| X (Twitter) | Twikit (unofficial API client) | Generates 300+ query combinations from AI terms x education terms. Uses cookie-based auth with exponential backoff for rate limits. | 6,498 |
-| LinkedIn | Playwright with human-like scrolling | Searches 84 queries (hashtags, product names, keyword combos). Simulates realistic user behavior with random pauses and scroll-backs. | 2,830 |
-| Reddit | curl via subprocess (public JSON API, no auth) | Browses 12 subreddits (hot/top) and runs 8 search queries. Fetches up to 5 comments per post. | 704 |
+```
+Raw crawled CSVs (data/crawled/)
+    │
+    ▼
+┌───────────────────────────────────────────────────────┐
+│  1. Consolidation              consolidate_corpus.py  │
+│     Merge all sources into unified schema,            │
+│     remove duplicates, drop empty rows                │
+│     → data/analysis/master_corpus.csv                 │
+└───────────────────────────────────────────────────────┘
+    │
+    ▼
+┌───────────────────────────────────────────────────────┐
+│  2. Preprocessing              preprocess.py          │
+│     Emoji-to-text, URL removal, HTML stripping,       │
+│     lowercasing, whitespace normalization,            │
+│     contraction expansion, abbreviation replacement,  │
+│     length truncation                                 │
+│     → data/analysis/master_corpus_cleaned.csv         │
+└───────────────────────────────────────────────────────┘
+    │
+    ▼
+┌───────────────────────────────────────────────────────┐
+│  3. Balancing                  balance_corpus.py      │
+│     Remove off-topic records, downsample positive     │
+│     records to achieve 1:1 sentiment ratio            │
+│     → data/final_corpus/corpus_balanced_1to1.csv      │
+└───────────────────────────────────────────────────────┘
+    │
+    ├─────────────────────────────┐
+    ▼                             ▼
+┌──────────────────────────┐  ┌──────────────────────────┐
+│  4a. Indexing            │  │  4b. Classification      │
+│      index_solr.py       │  │      classify.py         │
+│                          │  │                          │
+│  VADER sentiment scoring │  │  Subjectivity →          │
+│  Batch index into Solr   │  │  Polarity →              │
+│                          │  │  Emotion                 │
+│  → Solr opinions core    │  │  → classification_       │
+│                          │  │    results.csv           │
+└──────────────────────────┘  └──────────────────────────┘
+              │
+              ▼
+┌──────────────────────────┐
+│  5. Web App              │
+│     app/app.py           │
+│                          │
+│  Flask UI with search,   │
+│  facets, visualizations  │
+│  → http://localhost:5001 │
+└──────────────────────────┘
+```
 
-### Search Queries / Keywords
+Preprocessing runs **once** after consolidation so that all downstream steps (balancing, classification, indexing) work from the same clean data.
 
-The crawlers target a broad range of AI-in-education topics:
+---
+
+## Question 1: Crawling (20 points)
+
+### 1.1 How we crawled the corpus
+
+We chose **"AI in Education"** as our topic, covering public opinions on artificial intelligence tools (e.g. ChatGPT, Copilot, Gemini) and their impact on teaching, learning, and academic integrity. Data was crawled from five platforms to capture a diverse range of perspectives — from long-form expert answers to short social media posts.
+
+#### Sources
+
+| Source | Library / API | Crawling Method | Records |
+|--------|--------------|-----------------|---------|
+| **Quora** | Playwright (async browser automation), ftfy | Starting from 10 seed questions about AI in education, the scraper followed links to discover 5,000 unique question URLs. Up to 50 answers were extracted per page. Text was cleaned with Unicode normalization (ftfy) and deduplicated. | 30,000 |
+| **YouTube** | YouTube Data API v3 (google-api-python-client) | 32 targeted search queries were used to find relevant videos. Up to 30 videos per query and 120 comments per video were collected. Comments were deduplicated by comment ID and text hash, and entries shorter than 3 tokens were filtered out. | 30,000 |
+| **X (Twitter)** | Twikit (unofficial Twitter API client) | Over 300 query combinations were auto-generated by pairing AI terms with education terms. Cookie-based authentication was used with exponential backoff (30s to 5min waits) for rate limiting. | 6,498 |
+| **LinkedIn** | Playwright with human-like scrolling | 84 search queries including hashtags (#AIinEducation), product names, and keyword combinations. The scraper simulated realistic browsing behavior with random pauses (1.5–3s), periodic scroll-backs, and PageDown key presses. | 2,830 |
+| **Reddit** | curl via subprocess (public JSON API, no auth required) | 12 relevant subreddits were browsed. 8 search queries were executed, with hot and top posts fetched along with up to 5 comments per post. | 704 |
+
+#### Keywords used
 
 - **General:** "AI in education", "artificial intelligence in education", "future of AI in education"
-- **Generative AI:** "ChatGPT in education", "ChatGPT for students", "ChatGPT for teachers"
-- **Tools & Platforms:** Khanmigo, Duolingo AI, Coursera, Google Classroom, Copilot
+- **Generative AI tools:** "ChatGPT in education", "ChatGPT for students", "ChatGPT for teachers"
+- **Platforms:** Khanmigo, Duolingo AI, Coursera, Google Classroom, Copilot
 - **Concerns:** "AI cheating in schools", "AI plagiarism detection", "AI academic integrity"
 - **Policy:** "should schools allow AI", "AI regulation in education", "AI bans in schools"
-- **Future:** "AI replacing teachers", "AI transforming education", "personalized learning AI"
+- **Future of education:** "AI replacing teachers", "AI transforming education", "personalized learning AI"
 
-### Subreddits Crawled
+#### Subreddits crawled
 
 r/artificial, r/education, r/ChatGPT, r/MachineLearning, r/learnmachinelearning, r/highereducation, r/Teachers, r/college, r/computerscience, r/OnlineEducation, r/elearning, r/edtech
 
-### Data Storage
+#### Storage
 
-Raw crawled data is stored in `data/crawled/`.
-
-| File | Columns |
-|------|---------|
-| `quoracrawl.csv` | source, url, question_title, answer_text, scraped_at |
-| `youtubecrawl.csv` | video_id, video_title, channel_title, published_at, comment_id, parent_id, author, like_count, text, text_norm, query |
-| `twitterxcrawl.csv` | source, url, question_title, answer_text |
-| `linkedincrawl.csv` | source, url, question_title, answer_text |
-| `redditcrawl.csv` | source, url, question_title, answer_text, scraped_at |
-
-### Tools
-
-| Script | Purpose |
-|--------|---------|
-| `tools/reddit_filter.py` | Filters Reddit data to keep only rows mentioning both AI and education keywords |
-| `tools/reddit_format.py` | Cleans Reddit text (removes markdown, URLs, normalizes whitespace, drops entries <15 chars) |
-| `tools/consolidate_corpus.py` | Merges all source CSVs into a single `master_corpus.csv` with a unified schema |
-| `tools/check_relevance.py` | Checks each record for topical relevance (AI + education keywords), saves off-topic rows |
-| `tools/check_sentiment.py` | Runs VADER sentiment analysis to show positive/negative/neutral distribution |
-| `tools/balance_corpus.py` | Generates balanced corpus files by removing off-topic/positive Quora and downsampling |
-
-### Master Corpus
-
-All source CSVs are consolidated into `data/analysis/master_corpus.csv` by running:
-
-```bash
-python tools/consolidate_corpus.py
-```
-
-This normalises every source into a unified schema and applies cleaning:
+All raw data was stored as CSV files in `data/crawled/`, one per source. A consolidation script (`tools/consolidate_corpus.py`) merges all sources into a single `data/analysis/master_corpus.csv` with a unified schema:
 
 | Column | Description |
 |--------|-------------|
 | `id` | Sequential unique identifier |
-| `source` | Quora, YouTube, Twitter, LinkedIn, or Reddit |
+| `source` | Platform name (Quora, YouTube, Twitter, LinkedIn, Reddit) |
 | `url` | Link to original content |
-| `title` | Post/question title (where available) |
-| `text` | The opinion text content |
+| `title` | Post or question title (where available) |
+| `text` | The opinion text |
 | `date` | Timestamp (where available) |
 
-Cleaning steps:
-- Whitespace collapsed and stripped across all fields
-- Source names standardised (e.g. `"X (Twitter)"` → `"Twitter"`)
-- Rows with empty text dropped
-- Exact-duplicate texts removed (62 duplicates found across sources)
+During consolidation, whitespace was normalized, source names were standardized, empty-text rows were dropped, and 62 exact-duplicate texts were removed.
 
-### Corpus Statistics (after consolidation)
+#### Balancing
+
+A data quality analysis revealed two issues:
+
+1. **Topical relevance:** Only 51.8% of records mentioned both AI and education keywords. Quora had the lowest relevance rate at 30.5%.
+2. **Sentiment skew:** 65.2% of records were positive, 20.4% negative, and 14.4% neutral.
+
+To address both issues, we removed all off-topic Quora records and all positive Quora records, then downsampled the remaining positive records to achieve a 1:1 positive-to-negative ratio. The resulting balanced corpus (`data/final_corpus/corpus_balanced_1to1.csv`) contains 28,664 records and 1,108,322 words.
+
+### 1.2 Applications and sample queries
+
+Our crawled corpus enables users to search for and analyze public opinions about AI in education. Potential applications include:
+
+1. **Educators evaluating AI tools** — A teacher considering ChatGPT for their classroom can search for real experiences and concerns from other educators.
+2. **Policy makers assessing public sentiment** — University administrators can gauge how students and faculty feel about AI policies.
+3. **EdTech companies understanding user feedback** — Companies building AI tutoring or grading tools can find opinions about their products.
+4. **Researchers studying public discourse** — Academics studying how society perceives AI in education can analyze sentiment trends across platforms.
+
+#### Sample queries
+
+| # | Query | Purpose |
+|---|-------|---------|
+| 1 | `ChatGPT cheating` | Find opinions on whether ChatGPT enables academic dishonesty |
+| 2 | `AI tutor personalized learning` | Discover views on AI-powered personalized tutoring |
+| 3 | `should schools ban AI` | Retrieve arguments for and against AI bans in schools |
+| 4 | `AI grading essays` | Find opinions on automated essay grading and feedback |
+| 5 | `AI replacing teachers` | Explore whether people think AI will replace human teachers |
+
+### 1.3 Corpus statistics
+
+#### Raw corpus (after consolidation, before balancing)
 
 | Metric | Value |
 |--------|-------|
 | Total records | 69,970 |
 | Total words | 6,880,348 |
-| Unique types | 251,683 |
-
-#### Per-Source Breakdown
+| Unique types (unique words) | 251,683 |
 
 | Source | Records | Words | Avg Words/Record |
 |--------|---------|-------|------------------|
@@ -99,164 +157,68 @@ Cleaning steps:
 | LinkedIn | 2,830 | 89,083 | 31 |
 | Reddit | 701 | 67,645 | 96 |
 
-### Data Quality Checks
+#### Final balanced corpus (1:1 positive/negative ratio)
 
-#### Topical Relevance
+| Metric | Value |
+|--------|-------|
+| Total records | 28,664 |
+| Total words | 1,108,322 |
+| Unique types (unique words) | 94,926 |
 
-Each record is checked for the presence of at least one AI keyword (e.g. `ai`, `chatgpt`, `llm`, `neural network`) **and** at least one education keyword (e.g. `student`, `school`, `curriculum`, `grading`). Run with:
+| Source | Records | Words |
+|--------|---------|-------|
+| YouTube | 20,712 | 505,445 |
+| Twitter | 4,190 | 191,274 |
+| LinkedIn | 1,783 | 52,581 |
+| Quora | 1,535 | 318,848 |
+| Reddit | 444 | 40,174 |
 
-```bash
-python tools/check_relevance.py
-```
-
-| Source | Total | On-topic | Rate |
-|--------|-------|----------|------|
-| Quora | 30,000 | 9,156 | 30.5% |
-| YouTube | 30,000 | 19,407 | 64.7% |
-| Twitter | 6,439 | 4,676 | 72.6% |
-| LinkedIn | 2,830 | 2,332 | 82.4% |
-| Reddit | 701 | 697 | 99.4% |
-| **Overall** | **69,970** | **36,268** | **51.8%** |
-
-Off-topic rows are saved to `data/analysis/off_topic.csv` for review. Quora has the lowest relevance rate because many answers discuss AI or education in isolation rather than together.
-
-#### Sentiment Distribution
-
-VADER sentiment analysis is used as a quick health check to assess whether the corpus has a balanced mix of positive and negative opinions. Run with:
-
-```bash
-python tools/check_sentiment.py
-```
-
-| Sentiment | Count | Percentage |
-|-----------|-------|------------|
-| Positive | 45,595 | 65.2% |
-| Negative | 14,300 | 20.4% |
-| Neutral | 10,075 | 14.4% |
-
-Per-source breakdown:
-
-| Source | Pos% | Neg% | Neu% |
-|--------|------|------|------|
-| Quora | 77.3% | 20.4% | 2.4% |
-| YouTube | 54.1% | 21.5% | 24.3% |
-| Twitter | 60.2% | 20.2% | 19.6% |
-| LinkedIn | 65.3% | 10.1% | 24.6% |
-| Reddit | 63.9% | 21.0% | 15.1% |
-
-Positive/Negative ratio: **3.19** — the dataset leans positive. Per-record sentiment scores are saved to `data/analysis/sentiment_distribution.csv`.
-
-### Balanced Corpus
-
-To address the positive skew, balanced versions of the corpus are generated by removing off-topic Quora records, all positive Quora records, and then downsampling remaining positive records. Run with:
-
-```bash
-python tools/balance_corpus.py
-```
-
-| File | Pos/Neg Ratio | Records | Words |
-|------|---------------|---------|-------|
-| `data/final_corpus/corpus_balanced_1to1.csv` | 1.00 | 28,664 | 1,108,322 |
-| `data/final_corpus/corpus_balanced_1.5to1.csv` | 1.50 | 33,450 | 1,291,694 |
-
-Both files use the same unified schema (`id, source, url, title, text, date`) and exceed the assignment minimums of 10,000 records and 100,000 words.
+**Status: DONE**
 
 ---
 
-## Search Engine
+## Question 2: Indexing and UI (40 points)
 
-### Technology Stack
+### 2.1 Search Engine UI
+
+We built a web-based search interface using **Flask** (Python) with **Apache Solr 9** as the search backend.
+
+#### Technology stack
 
 | Component | Technology |
 |-----------|------------|
 | Search backend | Apache Solr 9 (Docker) |
 | Web framework | Flask (Python) |
+| Solr client | pysolr |
 | Sentiment analysis | VADER (vaderSentiment) |
 | Visualizations | matplotlib, WordCloud |
-| Solr client | pysolr |
 
-### Features
+#### UI features
 
-- **Full-text search** with Solr-powered query parsing and relevance ranking
-- **Query highlighting** — matching terms are highlighted in result snippets
-- **Multifaceted search** — filter results by source (Reddit, YouTube, Twitter, Quora) and sentiment (positive, negative, neutral) via interactive sidebar facets
-- **Timeline search** — filter results by date range
-- **Sentiment analysis** — each document is scored at index time using VADER, with a compound score and positive/negative/neutral label displayed per result
-- **Sentiment pie chart** — shows the sentiment distribution across all matching results
-- **Source bar chart** — shows the source distribution across all matching results
-- **Word cloud** — generated from the text of the current page of results
-- **Pagination** — results are paginated (10 per page) with previous/next navigation
-- **Synonym expansion** — query-time synonyms (e.g. AI/artificial intelligence, ML/machine learning) defined in `solr/configset/conf/synonyms.txt`
-- **Custom stopwords** — common filler words removed at index time via `solr/configset/conf/stopwords.txt`
-- **Responsive design** — sidebar collapses on mobile screens
+- **Search bar** on the landing page and at the top of results for quick refinement
+- **Result cards** showing title, highlighted text snippet, source badge, sentiment badge, and date
+- **Sidebar facets** for filtering by source and sentiment
+- **Date range filter** for timeline-based search
+- **Pagination** with 10 results per page and previous/next navigation
+- **Responsive design** with collapsible sidebar on mobile
 
-### How to Run
+#### Solr configuration
 
-#### Prerequisites
-
-- **Docker** (with Docker Compose)
-- **Python 3.8+**
-- Python packages: `pip install pysolr vaderSentiment flask matplotlib wordcloud`
-
-#### Step 1: Start Solr
-
-```bash
-docker compose up -d
-```
-
-This pulls the Solr 9 image (first time only), creates the `opinions` core with the custom schema and config from `solr/configset/`, and exposes Solr at **http://localhost:8983**.
-
-Wait a few seconds for Solr to fully start, then verify:
-
-```bash
-curl http://localhost:8983/solr/opinions/admin/ping
-```
-
-You should see `"status":"OK"`.
-
-#### Step 2: Index the corpus
-
-```bash
-python tools/index_solr.py
-```
-
-This reads `data/final_corpus/corpus_balanced_1to1.csv`, computes VADER sentiment for each record, and indexes 28,664 documents into Solr in batches.
-
-#### Step 3: Start the web app
-
-```bash
-python app/app.py
-```
-
-Open **http://localhost:5001** in your browser.
-
-#### Stopping
-
-```bash
-# Stop the Flask app with Ctrl+C
-# Stop Solr
-docker compose down
-```
-
----
-
-## Solr Configuration
-
-The custom Solr configset lives in `solr/configset/conf/`:
+The custom configset is in `solr/configset/conf/`:
 
 | File | Purpose |
 |------|---------|
-| `schema.xml` | Defines fields (id, source, url, title, text, date, sentiment, sentiment_score) and the `text_general` field type with standard tokenization, stopword removal, lowercase, and synonym expansion |
-| `solrconfig.xml` | Configures the search handler with highlighting and faceting defaults, auto-commit settings, and the ping endpoint |
-| `synonyms.txt` | Query-time synonyms (AI/artificial intelligence, ML/machine learning, etc.) |
+| `schema.xml` | Defines indexed fields and the text analysis chain (tokenization, stopwords, lowercase, stemming, synonyms) |
+| `solrconfig.xml` | Configures search handler with highlighting, faceting, and auto-commit |
+| `synonyms.txt` | Query-time synonym expansion (e.g. AI/artificial intelligence, ML/machine learning) |
 | `stopwords.txt` | Custom stopwords removed during indexing |
 
-### Indexed Document Schema
+#### Indexed document schema
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | string | Unique document identifier |
-| `source` | string | Origin platform (Reddit, YouTube, Twitter, Quora) |
+| `source` | string | Origin platform (Reddit, YouTube, Twitter, Quora, LinkedIn) |
 | `url` | string | Link to original content |
 | `title` | text_general | Post/question title |
 | `text` | text_general | Opinion text (full-text indexed) |
@@ -264,18 +226,220 @@ The custom Solr configset lives in `solr/configset/conf/`:
 | `sentiment` | string | VADER label: positive, negative, or neutral |
 | `sentiment_score` | pfloat | VADER compound score (-1.0 to 1.0) |
 
+### 2.2 Five queries with results and speed
+
+<!-- TODO: Run 5 queries, capture results and response times -->
+
+**Status: TODO**
+
 ---
 
+## Question 3: Indexing and Ranking Innovations (40 points)
 
-### Run Advanced Sentiment Classification (Ablation Study)
+The following innovations were implemented to enhance the search experience beyond basic full-text search:
 
-To test our state-of-the-art Lexical Gatekeeper and Deep Learning Ensemble (RoBERTa, BERTweet, ReviewBERT) against a baseline, run the stacked ensemble classification script:
+### 3.1 Multifaceted search
 
+Users can filter results by **source platform** (Reddit, YouTube, Twitter, Quora, LinkedIn) and **sentiment** (positive, negative, neutral) using interactive sidebar facets. This allows users to narrow results to specific perspectives — for example, viewing only negative opinions from Twitter about a topic.
+
+### 3.2 Timeline search
+
+A **date range filter** lets users search within specific time windows. This is useful for tracking how opinions evolved over time — for example, comparing sentiment before and after ChatGPT's release.
+
+### 3.3 Enhanced search with visualizations
+
+Each search result page includes:
+- **Sentiment pie chart** — shows the positive/negative/neutral distribution across all matching results
+- **Source bar chart** — shows how results are distributed across platforms
+- **Word cloud** — generated from the text of the current results page, highlighting the most frequent terms
+
+These visualizations give users an at-a-glance summary of the opinion landscape for any query.
+
+### 3.4 Synonym expansion
+
+Query-time synonym expansion is configured in `solr/configset/conf/synonyms.txt`. This ensures that searching for "AI" also retrieves results mentioning "artificial intelligence", "machine learning", "LLM", "large language model", etc. Education-specific synonyms are also included (e.g. student/learner, school/education, professor/instructor).
+
+### 3.5 Query highlighting
+
+Matching terms are highlighted in result snippets using Solr's UnifiedHighlighter. This helps users quickly identify why a result matched their query without reading the full text.
+
+### 3.6 Stemming and stopword removal
+
+The text analysis chain applies **Porter stemming** so that queries for "teaching" also match "teacher" and "teach". Custom **stopwords** are removed at index time to reduce noise and improve relevance.
+
+### 3.7 Field-weighted relevance ranking
+
+The search uses Solr's **eDisMax** query parser with field weighting:
+- `text` field is weighted 4x (main content)
+- `title` field is weighted 0.5x (supplementary)
+- Phrase matches in `text` get an 8x boost
+- Minimum match is set to 75% for flexible matching
+
+This ensures that documents with the query terms in the body text rank higher than those with matches only in the title.
+
+<!-- TODO: Add before/after examples showing queries that improved with these innovations -->
+
+**Status: PARTIALLY DONE** (features implemented, write-up with examples needed)
+
+---
+
+## Question 4: Classification (40 points)
+
+### 4.1 Motivation (classification approach)
+
+We implemented a **three-stage hybrid classification pipeline** combining rule-based NLP with state-of-the-art transformer models:
+
+| Stage | Process | Tool/Model | Objective |
+|-------|---------|------------|-----------|
+| 1 | Subjectivity Detection | TextBlob | Filter objective facts from subjective opinions |
+| 2 | Polarity Detection | Twitter-RoBERTa | Classify opinions as positive, negative, or neutral |
+| 3 | Emotion Detection | DistilRoBERTa | Map text to education-relevant emotional categories |
+
+**Stage 1 (Subjectivity):** TextBlob is used as a rule-based filter to separate opinionated text from factual/neutral content. A low subjectivity threshold (0.15) is used to retain most social media opinions while filtering out clearly objective statements. This avoids sending all records through computationally expensive transformers.
+
+**Stage 2 (Polarity):** Opinionated texts are classified using `cardiffnlp/twitter-roberta-base-sentiment-latest`, a RoBERTa model pre-trained on ~124 million tweets. This model represents the state of the art for social media sentiment, understanding internet slang and informal syntax significantly better than older approaches like Naive Bayes, SVMs, or standard BERT.
+
+**Stage 3 (Emotion):** Opinionated texts are also passed through `j-hartmann/emotion-english-distilroberta-base`, which detects 7 emotions mapped to education-relevant categories:
+- joy → excitement
+- fear/sadness → concern
+- anger/disgust → anger
+- surprise → excitement
+- neutral → neutral
+
+### 4.2 Preprocessing (microtext normalization)
+
+Social media text is noisy — full of emojis, URLs, inconsistent capitalization, and broken HTML. Without cleaning, this degrades transformer tokenization and introduces out-of-vocabulary errors.
+
+Our preprocessing steps:
+- **Emoji-to-text:** Emojis are converted to plain text tokens using the `emoji` library, preserving semantic meaning
+- **Noise removal:** URLs are stripped via regex and lingering HTML tags are removed
+- **Normalization:** Text is lowercased and multi-line whitespace is collapsed into single spaces
+- **Length truncation:** Text is constrained to ~512 words to satisfy RoBERTa's hard token-length limit
+
+### 4.3 Evaluation dataset
+
+We manually labeled **1,000 records** in `data/final_corpus/eval.xls` with sentiment labels (positive, negative, neutral).
+
+<!-- TODO: Report inter-annotator agreement (>= 80% required) -->
+
+### 4.4 Evaluation metrics
+
+The polarity classification stage was evaluated on the 1,000 labeled records. Overall accuracy: **55.9%**.
+
+| Class | Precision | Recall | F1-score | Support |
+|-------|----------:|-------:|---------:|--------:|
+| Positive | 0.3468 | 0.4082 | 0.3750 | 147 |
+| Negative | 0.3663 | 0.6033 | 0.4559 | 184 |
+| Neutral | 0.7405 | 0.5800 | 0.6505 | 669 |
+| Macro avg | 0.4845 | 0.5305 | 0.4938 | 1000 |
+| Weighted avg | 0.6138 | 0.5590 | 0.5742 | 1000 |
+
+#### Discussion
+
+The model performs best on the **neutral class** (F1: 0.6505, precision: 0.7405), meaning that when it predicts neutral, it is quite often correct. However, it struggles with **positive** (F1: 0.3750) and **negative** (F1: 0.4559) classes.
+
+This difficulty is expected because many posts in our dataset express **mixed views** — e.g., "AI helps with lesson planning but weakens critical thinking" contains both benefits and concerns, making single-label classification hard.
+
+A key limitation is the **pipeline design**: errors in Stage 1 (subjectivity detection) propagate to Stage 2. If an opinionated text is incorrectly classified as neutral by TextBlob, it never reaches the polarity model. The confusion matrix confirms this — many positive and negative records are misclassified as neutral.
+
+### 4.5 Random accuracy test
+
+The evaluation dataset has an imbalanced distribution (Neutral: 669, Negative: 184, Positive: 147). A proportional random baseline that guesses based on this distribution would achieve an expected accuracy of **50.3%**. Our model's 55.9% outperforms both this baseline and a uniform random baseline of 33.3%.
+
+To verify the model generalizes beyond the 1,000 labeled records, we sampled **30 random records** from the remaining 28,000+ unlabeled corpus and manually evaluated the predictions. The model correctly classified **27 out of 30 records (90% accuracy)**, confirming that the evaluation metrics are not due to overfitting.
+
+Full results are in `Q4_random_sample_30.txt`.
+
+### 4.6 Performance metrics
+
+<!-- TODO: Measure and report classification throughput (records/sec) and scalability -->
+
+**Status: PARTIALLY DONE** (inter-annotator agreement and performance metrics still needed)
+
+---
+
+## Question 5: Classification Innovations (40 points)
+
+### 5.1 Emotion detection (Stage 3)
+
+Beyond the required subjectivity + polarity subtasks, we added a third **emotion detection** stage using DistilRoBERTa. This maps text to education-relevant emotional categories (excitement, concern, anger, neutral), enabling more nuanced filtering in the search UI beyond simple positive/negative.
+
+<!-- TODO: Add more innovations (e.g., sarcasm detection, aspect-based sentiment, ensemble methods) -->
+<!-- TODO: Perform ablation study showing each innovation's contribution to accuracy -->
+
+**Status: TODO** (need additional innovations and ablation study)
+
+---
+
+## How to Run
+
+### Prerequisites
+
+- **Docker** (with Docker Compose)
+- **Python 3.8+**
+- Python packages: `pip install pysolr vaderSentiment flask matplotlib wordcloud transformers torch pandas emoji textblob`
+
+### Step 1: Prepare the data
+
+```bash
+# Consolidate raw crawled data into master corpus
+python tools/consolidate_corpus.py
+
+# Preprocess the master corpus
+python preprocess.py
+
+# Balance the corpus (1:1 positive/negative ratio)
+python tools/balance_corpus.py
+```
+
+### Step 2: Classify the corpus
+
+```bash
+python classify.py
+```
+
+### Step 3: Start Solr and index
+
+```bash
+docker compose up -d
+```
+
+Verify Solr is running:
+
+```bash
+curl http://localhost:8983/solr/opinions/admin/ping
+```
+
+Index the balanced corpus:
+
+```bash
+python tools/index_solr.py
+```
+
+### Step 4: Start the web app
+
+```bash
+python app/app.py
+```
+
+Open **http://localhost:5001** in your browser.
+
+### Stopping
+
+```bash
+# Stop Flask with Ctrl+C
+docker compose down
+```
+
+---
+
+### Run Advanced Sentiment Classification 
+Ablation Study between RoBERTa, BERTweet, ReviewBERT. Soft voting ensemble and meta stacking ensemble independent evaluations.
 ```bash
 python innovations/ensemble_classification.py
 ```
 
-It compares Soft Voting vs. Logistic Regression Meta-Model Stacking, exporting the final predictions to `data/analysis/stacked_ensemble_eval.csv`.
+---
 
 ## Project Structure
 
@@ -286,7 +450,7 @@ informationRetrieval/
 │   ├── static/
 │   │   └── style.css           # Responsive CSS styles
 │   └── templates/
-│       ├── index.html          # Landing page with search box and advanced filters
+│       ├── index.html          # Landing page with search box and filters
 │       └── results.html        # Results page with facets, charts, pagination
 ├── solr/                       # Solr configuration
 │   └── configset/conf/
@@ -297,33 +461,29 @@ informationRetrieval/
 ├── docker-compose.yml          # Solr 9 container definition
 ├── data/
 │   ├── crawled/                # Raw crawled CSV datasets
-│   │   ├── quoracrawl.csv
-│   │   ├── youtubecrawl.csv
-│   │   ├── twitterxcrawl.csv
-│   │   ├── linkedincrawl.csv
-│   │   └── redditcrawl.csv
 │   ├── analysis/               # Intermediate analysis outputs
-│   │   ├── master_corpus.csv
-│   │   ├── off_topic.csv
-│   │   └── sentiment_distribution.csv
 │   └── final_corpus/           # Balanced corpus files for indexing
-│       ├── corpus_balanced_1to1.csv
-│       └── corpus_balanced_1.5to1.csv
-├── data_scrapping_scripts/     # Crawling scripts
-│   ├── quora_scraper.py
-│   ├── youtube_crawl.py
-│   ├── Xscraper.py
-│   ├── linkedinscrap.py
-│   └── reddit_scraper.py
-├── tools/                      # Post-processing & indexing utilities
-│   ├── reddit_filter.py
-│   ├── reddit_format.py
-│   ├── consolidate_corpus.py
-│   ├── check_relevance.py
-│   ├── check_sentiment.py
-│   ├── balance_corpus.py
-│   └── index_solr.py           # Indexes balanced corpus into Solr with VADER sentiment
+├── data_scrapping_scripts/     # Crawling scripts (one per source)
 ├── innovations/                # Advanced model ablation studies
-│   └── ensemble_classification.py # Deep learning ensemble combining RoBERTa, BERTweet, ReviewBERT
-└── Assignment.pdf
+│   └── ensemble_classification.py # Deep learning ensemble combining RoBERTa, BERTweet, ReviewBERT (soft voting, meta stacking)
+├── tools/                      # Post-processing and indexing utilities
+├── preprocess.py               # Text preprocessing (run once after consolidation)
+├── classify.py                 # 3-stage classification pipeline
+├── evaluate.py                 # Evaluation script for classification metrics
+├── answers.md                  # Detailed assignment answers
+├── Q4_random_sample_30.txt     # Manual evaluation of 30 random predictions
+└── Assignment.pdf              # Original assignment specification
+
 ```
+
+---
+
+## Progress Summary
+
+| Question | Task | Status |
+|----------|------|--------|
+| Q1 | Crawling — sources, keywords, statistics, balancing | DONE |
+| Q2 | UI design and 5 queries with speed measurements | UI done, queries/speed TODO |
+| Q3 | Indexing innovations with examples | Features implemented, write-up with examples TODO |
+| Q4 | Classification — approach, preprocessing, evaluation, random test | Mostly done, inter-annotator agreement and performance metrics TODO |
+| Q5 | Classification innovations with ablation study | stacked ensemble study done, sarcasm detection,etc. TODO |

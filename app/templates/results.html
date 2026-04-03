@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ query }} - AI Opinions Search</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <!-- Top search bar -->
@@ -98,22 +99,29 @@
             </div>
 
             <!-- Charts section -->
-            {% if sentiment_chart or source_chart or wordcloud_img %}
+            {% if sentiment_facets or source_facets or wordcloud_img %}
             <details class="charts-section" open>
                 <summary>Visualizations</summary>
                 <div class="charts-grid">
-                    {% if sentiment_chart %}
-                    <div class="chart">
-                        <img src="data:image/png;base64,{{ sentiment_chart }}" alt="Sentiment Distribution">
+                    {% if sentiment_facets %}
+                    <div class="chart-card">
+                        <div class="chart-title">Sentiment Distribution</div>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="sentimentChart"></canvas>
+                        </div>
                     </div>
                     {% endif %}
-                    {% if source_chart %}
-                    <div class="chart">
-                        <img src="data:image/png;base64,{{ source_chart }}" alt="Source Distribution">
+                    {% if source_facets %}
+                    <div class="chart-card">
+                        <div class="chart-title">Source Distribution</div>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="sourceChart"></canvas>
+                        </div>
                     </div>
                     {% endif %}
                     {% if wordcloud_img %}
-                    <div class="chart chart-wide">
+                    <div class="chart-card chart-wide">
+                        <div class="chart-title">Word Cloud</div>
                         <img src="data:image/png;base64,{{ wordcloud_img }}" alt="Word Cloud">
                     </div>
                     {% endif %}
@@ -172,5 +180,119 @@
             {% endif %}
         </main>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sentimentFacets = {{ sentiment_facets | tojson }};
+        const sourceFacets = {{ source_facets | tojson }};
+
+        const sentimentColors = {
+            positive: '#4CAF50',
+            negative: '#F44336',
+            neutral: '#FFC107'
+        };
+
+        const sourceColors = {
+            Reddit: '#FF4500',
+            YouTube: '#FF0000',
+            Twitter: '#1DA1F2',
+            Quora: '#B92B27'
+        };
+        const fallbackColors = ['#2196F3', '#9C27B0', '#009688', '#795548', '#607D8B'];
+
+        // Sentiment doughnut chart
+        const sentimentCanvas = document.getElementById('sentimentChart');
+        if (sentimentCanvas) {
+            const labels = Object.keys(sentimentFacets).filter(k => sentimentFacets[k] > 0);
+            const data = labels.map(k => sentimentFacets[k]);
+            const colors = labels.map(k => sentimentColors[k] || '#999999');
+
+            new Chart(sentimentCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: labels.map(l => l.charAt(0).toUpperCase() + l.slice(1)),
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (ctx) {
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = ((ctx.raw / total) * 100).toFixed(1);
+                                    return ctx.label + ': ' + ctx.raw + ' (' + pct + '%)';
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 16, usePointStyle: true }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Source horizontal bar chart
+        const sourceCanvas = document.getElementById('sourceChart');
+        if (sourceCanvas) {
+            const sorted = Object.entries(sourceFacets)
+                .filter(([, v]) => v > 0)
+                .sort((a, b) => b[1] - a[1]);
+            const labels = sorted.map(([k]) => k);
+            const data = sorted.map(([, v]) => v);
+            let fIdx = 0;
+            const colors = labels.map(k => {
+                if (sourceColors[k]) return sourceColors[k];
+                return fallbackColors[fIdx++ % fallbackColors.length];
+            });
+
+            new Chart(sourceCanvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (ctx) {
+                                    return ctx.raw + ' results';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Number of Results' },
+                            ticks: { precision: 0 }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
