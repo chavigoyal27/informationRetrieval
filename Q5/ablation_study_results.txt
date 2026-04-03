@@ -1,0 +1,64 @@
+======================================================================
+ABLATION STUDY RESULTS - QUESTION 5
+Generated: 2026-04-04 03:38:31
+======================================================================
+
+Configuration                  Accuracy     Macro F1     Δ Accuracy  
+----------------------------------------------------------------------
+Baseline (RoBERTa)             0.5590       0.4938       +0.0000
+Hybrid (Neural+Symbolic)       0.5610       0.4862       +0.0020
+Ensemble (Voting+Rules)        0.5810       0.5057       +0.0220
+Hybrid + Ensemble (Combined)   0.5890       0.4934       +0.0300
+
+======================================================================
+IMPROVEMENT SUMMARY
+======================================================================
+
+  ✅ Hybrid (Neural+Symbolic): +0.2% improvement
+     (55.9% → 56.1%)
+
+  ✅ Ensemble (Voting+Rules): +2.2% improvement
+     (55.9% → 58.1%)
+
+  ✅ Hybrid + Ensemble (Combined): +3.0% improvement
+     (55.9% → 58.9%)
+
+======================================================================
+🏆 BEST MODEL: Hybrid + Ensemble (Combined) with 58.9% accuracy
+======================================================================
+
+
+======================================================================
+DETAILED RESULTS BY MODEL
+======================================================================
+
+
+Baseline (RoBERTa):
+  Accuracy: 0.5590 (55.9%)
+  Macro F1: 0.4938
+  Weighted F1: 0.5742
+
+Hybrid (Neural+Symbolic):
+  Accuracy: 0.5610 (56.1%)
+  Macro F1: 0.4862
+  Weighted F1: 0.5744
+
+Ensemble (Voting+Rules):
+  Accuracy: 0.5810 (58.1%)
+  Macro F1: 0.5057
+  Weighted F1: 0.5937
+
+Hybrid + Ensemble (Combined):
+  Accuracy: 0.5890 (58.9%)
+  Macro F1: 0.4934
+  Weighted F1: 0.5959
+
+
+======================================================================
+RANKING (by Accuracy)
+======================================================================
+
+  1. Hybrid + Ensemble (Combined): 58.9%
+  2. Ensemble (Voting+Rules): 58.1%
+  3. Hybrid (Neural+Symbolic): 56.1%
+  4. Baseline (RoBERTa): 55.9%
