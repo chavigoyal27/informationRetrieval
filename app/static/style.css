@@ -205,14 +205,31 @@ a:hover { text-decoration: underline; }
     color: #333;
 }
 .charts-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-top: 1rem;
-    justify-content: center;
 }
-.chart img { max-width: 100%; height: auto; }
-.chart-wide { flex-basis: 100%; }
+.chart-card {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1rem;
+}
+.chart-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+.chart-canvas-wrapper {
+    position: relative;
+    height: 260px;
+}
+.chart-card img { max-width: 100%; height: auto; }
+.chart-wide { grid-column: 1 / -1; }
 
 /* Results */
 .result-item {
@@ -279,4 +296,5 @@ a:hover { text-decoration: underline; }
     .results-layout { flex-direction: column; }
     .sidebar { width: 100%; }
     .filter-grid { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
 }

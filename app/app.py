@@ -28,56 +28,10 @@ RESULTS_PER_PAGE = 10
 def build_chart_base64(fig):
     """Render a matplotlib figure to a base64-encoded PNG string."""
     buf = io.BytesIO()
-    fig.savefig(buf, format="png", bbox_inches="tight", dpi=100)
+    fig.savefig(buf, format="png", bbox_inches="tight", dpi=150)
     plt.close(fig)
     buf.seek(0)
     return base64.b64encode(buf.read()).decode("utf-8")
-
-
-def generate_sentiment_chart(facet_counts):
-    """Pie chart of sentiment distribution from facet counts."""
-    labels = []
-    sizes = []
-    colors_map = {
-        "positive": "#4CAF50",
-        "negative": "#F44336",
-        "neutral": "#FFC107",
-    }
-    colors = []
-    for label, count in facet_counts.items():
-        if count > 0:
-            labels.append(f"{label} ({count})")
-            sizes.append(count)
-            colors.append(colors_map.get(label, "#999999"))
-
-    if not sizes:
-        return None
-
-    fig, ax = plt.subplots(figsize=(4, 3))
-    ax.pie(sizes, labels=labels, colors=colors, autopct="%1.1f%%", startangle=90)
-    ax.set_title("Sentiment Distribution")
-    return build_chart_base64(fig)
-
-
-def generate_source_chart(facet_counts):
-    """Bar chart of source distribution from facet counts."""
-    labels = []
-    sizes = []
-    for label, count in sorted(facet_counts.items(), key=lambda x: -x[1]):
-        if count > 0:
-            labels.append(label)
-            sizes.append(count)
-
-    if not sizes:
-        return None
-
-    fig, ax = plt.subplots(figsize=(5, 3))
-    bar_colors = ["#2196F3", "#FF9800", "#9C27B0", "#009688", "#795548"]
-    ax.barh(labels, sizes, color=bar_colors[: len(labels)])
-    ax.set_xlabel("Number of Results")
-    ax.set_title("Source Distribution")
-    ax.invert_yaxis()
-    return build_chart_base64(fig)
 
 
 def generate_wordcloud(texts):
@@ -87,17 +41,18 @@ def generate_wordcloud(texts):
         return None
 
     wc = WordCloud(
-        width=600,
-        height=300,
+        width=1600,
+        height=600,
         background_color="white",
         max_words=80,
         colormap="viridis",
+        scale=2,
     ).generate(combined)
 
-    fig, ax = plt.subplots(figsize=(6, 3))
+    fig, ax = plt.subplots(figsize=(12, 4.5))
     ax.imshow(wc, interpolation="bilinear")
     ax.axis("off")
-    ax.set_title("Word Cloud")
+    fig.tight_layout(pad=0)
     return build_chart_base64(fig)
 
 
@@ -205,10 +160,6 @@ def search():
             "sentiment_score": doc.get("sentiment_score", 0),
         })
 
-    # Generate charts from facet data (not just current page)
-    sentiment_chart = generate_sentiment_chart(sentiment_facets)
-    source_chart = generate_source_chart(source_facets)
-
     # Word cloud from current page texts
     texts = [doc.get("text", "") for doc in results]
     wordcloud_img = generate_wordcloud(texts) if texts else None
@@ -228,8 +179,6 @@ def search():
         active_sentiment=sentiment,
         date_from=date_from,
         date_to=date_to,
-        sentiment_chart=sentiment_chart,
-        source_chart=source_chart,
         wordcloud_img=wordcloud_img,
     )
 
