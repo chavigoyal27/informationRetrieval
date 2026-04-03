@@ -23,7 +23,7 @@ from transformers import pipeline
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-from classify import preprocess
+from preprocess import preprocess
 
 EVAL_FILE = os.path.join(BASE_DIR, "data", "final_corpus", "eval.xls")
 
