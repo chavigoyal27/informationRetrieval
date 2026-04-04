@@ -190,3 +190,10 @@ On the remaining 28,000+ unlabelled records, we extracted a random sample of 30 
 | **3. Subjectivity Filter + M3 (ReviewBERT Forum)** | 0.4450 (44.5%) | |
 | **4. INNOVATION 1: Soft Voting Ensemble** | 0.5050 (50.5%) | |
 | **5. INNOVATION 2: Stacking Meta** | **0.6700 (67.0%)** | *State-of-the-Art result* |
+
+### Hybrid Clasiification Results (Test 20/80)
+
+| Model Setup | Accuracy |
+| :--- | :--- |
+| **Baseline (Roberta)** | 0.5350 (53.5%) |
+| **Hybrid Classifier** | 0.6750 (67.5%) |
