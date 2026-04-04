@@ -41,7 +41,6 @@
       <str name="facet">true</str>
       <str name="facet.field">source</str>
       <str name="facet.field">sentiment</str>
-      <str name="facet.field">emotion</str>
       <int name="facet.mincount">1</int>
     </lst>
   </requestHandler>

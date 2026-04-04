@@ -4,55 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Opinions Search Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="landing">
-        <h1>AI Opinions Search Engine</h1>
-        <p class="subtitle">Search 28,664 opinions about AI from Reddit, YouTube, Twitter, and Quora</p>
-
-        <form action="/search" method="GET" class="search-form-landing">
-            <div class="search-box-landing">
+    <header class="topbar">
+        <a href="/" class="logo">AI Opinions</a>
+        <form action="/search" method="GET" class="search-bar-unified">
+            <div class="search-row">
                 <input type="text" name="q" placeholder="Search opinions about AI..." autofocus>
                 <button type="submit">Search</button>
             </div>
-
-            <details class="advanced-filters">
-                <summary>Advanced Filters</summary>
-                <div class="filter-grid">
-                    <div class="filter-group">
-                        <label>Sources:</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" name="source" value="Reddit"> Reddit</label>
-                            <label><input type="checkbox" name="source" value="YouTube"> YouTube</label>
-                            <label><input type="checkbox" name="source" value="Twitter"> Twitter</label>
-                            <label><input type="checkbox" name="source" value="Quora"> Quora</label>
-                        </div>
-                    </div>
-                    <div class="filter-group">
-                        <label for="sentiment">Sentiment:</label>
-                        <select name="sentiment" id="sentiment">
-                            <option value="">All</option>
-                            <option value="positive">Positive</option>
-                            <option value="negative">Negative</option>
-                            <option value="neutral">Neutral</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Date Range:</label>
-                        <div class="date-range">
-                            <input type="date" name="date_from" placeholder="From">
-                            <span>to</span>
-                            <input type="date" name="date_to" placeholder="To">
-                        </div>
-                    </div>
+            <div class="filters-row">
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">Sources:</span>
+                    <label><input type="checkbox" name="source" value="Reddit"> Reddit</label>
+                    <label><input type="checkbox" name="source" value="YouTube"> YouTube</label>
+                    <label><input type="checkbox" name="source" value="Twitter"> Twitter</label>
+                    <label><input type="checkbox" name="source" value="Quora"> Quora</label>
                 </div>
-            </details>
+                <span class="filter-separator"></span>
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">Sentiment:</span>
+                    <select name="sentiment">
+                        <option value="">All</option>
+                        <option value="positive">Positive</option>
+                        <option value="negative">Negative</option>
+                        <option value="neutral">Neutral</option>
+                    </select>
+                </div>
+                <span class="filter-separator"></span>
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">Emotion:</span>
+                    <select name="emotion">
+                        <option value="">All</option>
+                        <option value="excitement">Excitement</option>
+                        <option value="concern">Concern</option>
+                        <option value="anger">Anger</option>
+                        <option value="neutral">Neutral</option>
+                    </select>
+                </div>
+                <span class="filter-separator"></span>
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">From:</span>
+                    <input type="date" name="date_from">
+                    <span class="filter-inline-label">To:</span>
+                    <input type="date" name="date_to">
+                </div>
+            </div>
         </form>
+    </header>
+
+    <div class="landing-body">
+        <h1>AI Opinions Search Engine</h1>
+        <p class="subtitle">Search 28,664 opinions about AI from Reddit, YouTube, Twitter, and Quora</p>
 
         {% if error %}
         <p class="error">{{ error }}</p>
         {% endif %}
+
+
+        <div class="landing-suggestions">
+            <h3 class="suggestions-title">Try searching for</h3>
+            <div class="suggestions-list">
+                <a href="/search?q=ChatGPT" class="suggestion-chip">ChatGPT</a>
+                <a href="/search?q=AI+replacing+jobs" class="suggestion-chip">AI replacing jobs</a>
+                <a href="/search?q=machine+learning" class="suggestion-chip">machine learning</a>
+                <a href="/search?q=OpenAI" class="suggestion-chip">OpenAI</a>
+                <a href="/search?q=AI+ethics" class="suggestion-chip">AI ethics</a>
+                <a href="/search?q=deepfake" class="suggestion-chip">deepfake</a>
+                <a href="/search?q=AI+in+education" class="suggestion-chip">AI in education</a>
+                <a href="/search?q=copilot" class="suggestion-chip">copilot</a>
+            </div>
+        </div>
     </div>
+
 </body>
 </html>

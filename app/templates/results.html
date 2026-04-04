@@ -4,56 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ query }} - AI Opinions Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <!-- Top search bar -->
     <header class="topbar">
         <a href="/" class="logo">AI Opinions</a>
-        <form action="/search" method="GET" class="search-form-top">
-            <input type="text" name="q" value="{{ query }}" placeholder="Search...">
-            {% for s in active_sources %}
-            <input type="hidden" name="source" value="{{ s }}">
-            {% endfor %}
-            {% if active_sentiment %}
-            <input type="hidden" name="sentiment" value="{{ active_sentiment }}">
-            {% endif %}
-            {% if date_from %}
-            <input type="hidden" name="date_from" value="{{ date_from }}">
-            {% endif %}
-            {% if date_to %}
-            <input type="hidden" name="date_to" value="{{ date_to }}">
-            {% endif %}
-            <button type="submit">Search</button>
-        </form>
-    </header>
-
-    <div class="results-layout">
-        <!-- Sidebar with facets and filters -->
-        <aside class="sidebar">
-            <form action="/search" method="GET" id="facet-form">
-                <input type="hidden" name="q" value="{{ query }}">
-
-                <!-- Source facets -->
-                <div class="facet-section">
-                    <h3>Source</h3>
+        <form action="/search" method="GET" id="facet-form" class="search-bar-unified">
+            <div class="search-row">
+                <input type="text" name="q" value="{{ query }}" placeholder="Search...">
+                <button type="submit">Search</button>
+            </div>
+            <div class="filters-row">
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">Sources:</span>
                     {% for source, count in source_facets.items() %}
-                    <label class="facet-item">
+                    <label>
                         <input type="checkbox" name="source" value="{{ source }}"
                                {% if source in active_sources %}checked{% endif %}
                                onchange="this.form.submit()">
-                        <span class="facet-label">{{ source }}</span>
-                        <span class="facet-count">({{ count }})</span>
+                        {{ source }} <span class="facet-count-inline">{{ count }}</span>
                     </label>
                     {% endfor %}
                 </div>
-
-                <!-- Sentiment facets -->
-                <div class="facet-section">
-                    <h3>Sentiment</h3>
+                <span class="filter-separator"></span>
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">Sentiment:</span>
                     <select name="sentiment" onchange="this.form.submit()">
-                        <option value="">All Sentiments</option>
+                        <option value="">All</option>
                         {% for sent, count in sentiment_facets.items() %}
                         <option value="{{ sent }}" {% if sent == active_sentiment %}selected{% endif %}>
                             {{ sent|capitalize }} ({{ count }})
@@ -61,75 +42,77 @@
                         {% endfor %}
                     </select>
                 </div>
-
-                <!-- Date range filter -->
-                <div class="facet-section">
-                    <h3>Date Range</h3>
-                    <div class="date-inputs">
-                        <label>From:
-                            <input type="date" name="date_from" value="{{ date_from }}"
-                                   onchange="this.form.submit()">
-                        </label>
-                        <label>To:
-                            <input type="date" name="date_to" value="{{ date_to }}"
-                                   onchange="this.form.submit()">
-                        </label>
-                    </div>
-                    {% if date_from or date_to %}
-                    <a href="/search?q={{ query }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}"
-                       class="clear-link">Clear dates</a>
-                    {% endif %}
+                <span class="filter-separator"></span>
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">Emotion:</span>
+                    <select name="emotion" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        {% for emo, count in emotion_facets.items() %}
+                        <option value="{{ emo }}" {% if emo == active_emotion %}selected{% endif %}>
+                            {{ emo|capitalize }} ({{ count }})
+                        </option>
+                        {% endfor %}
+                    </select>
                 </div>
-
-                {% if active_sources or active_sentiment or date_from or date_to %}
-                <div class="facet-section">
-                    <a href="/search?q={{ query }}" class="clear-all">Clear All Filters</a>
+                <span class="filter-separator"></span>
+                <div class="filter-inline-group">
+                    <span class="filter-inline-label">From:</span>
+                    <input type="date" name="date_from" value="{{ date_from }}" onchange="this.form.submit()">
+                    <span class="filter-inline-label">To:</span>
+                    <input type="date" name="date_to" value="{{ date_to }}" onchange="this.form.submit()">
                 </div>
+                {% if active_sources or active_sentiment or active_emotion or date_from or date_to %}
+                <span class="filter-separator"></span>
+                <a href="/search?q={{ query }}" class="clear-all-inline">Clear All</a>
                 {% endif %}
-            </form>
-        </aside>
+            </div>
+        </form>
+    </header>
 
-        <!-- Main content -->
+    <div class="results-container">
+        <!-- Charts row at top -->
+        {% if sentiment_facets or source_facets or emotion_facets or wordcloud_img %}
+        <div class="charts-row fade-in">
+            {% if sentiment_facets %}
+            <div class="chart-card">
+                <div class="chart-title">Sentiment</div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+            {% endif %}
+            {% if emotion_facets %}
+            <div class="chart-card">
+                <div class="chart-title">Emotion</div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="emotionChart"></canvas>
+                </div>
+            </div>
+            {% endif %}
+            {% if source_facets %}
+            <div class="chart-card">
+                <div class="chart-title">Sources</div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="sourceChart"></canvas>
+                </div>
+            </div>
+            {% endif %}
+            {% if wordcloud_img %}
+            <div class="chart-card chart-card-wide">
+                <div class="chart-title">Word Cloud</div>
+                <img src="data:image/png;base64,{{ wordcloud_img }}" alt="Word Cloud">
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Results -->
         <main class="results-main">
-            <!-- Query stats -->
-            <div class="query-stats">
+            <div class="query-stats fade-in">
                 <span>{{ total_hits }} results for "<strong>{{ query }}</strong>"</span>
-                <span class="query-time">Solr QTime: {{ solr_qtime }} ms</span>
-                <span class="query-time">Total Time: {{ query_time }} ms</span>
+                <span class="query-time">Solr: {{ solr_qtime }} ms | Total: {{ query_time }} ms</span>
             </div>
 
-            <!-- Charts section -->
-            {% if sentiment_facets or source_facets or wordcloud_img %}
-            <details class="charts-section" open>
-                <summary>Visualizations</summary>
-                <div class="charts-grid">
-                    {% if sentiment_facets %}
-                    <div class="chart-card">
-                        <div class="chart-title">Sentiment Distribution</div>
-                        <div class="chart-canvas-wrapper">
-                            <canvas id="sentimentChart"></canvas>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% if source_facets %}
-                    <div class="chart-card">
-                        <div class="chart-title">Source Distribution</div>
-                        <div class="chart-canvas-wrapper">
-                            <canvas id="sourceChart"></canvas>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% if wordcloud_img %}
-                    <div class="chart-card chart-wide">
-                        <div class="chart-title">Word Cloud</div>
-                        <img src="data:image/png;base64,{{ wordcloud_img }}" alt="Word Cloud">
-                    </div>
-                    {% endif %}
-                </div>
-            </details>
-            {% endif %}
-
-            <!-- Results list -->
             <div class="results-list">
                 {% for doc in docs %}
                 <div class="result-item">
@@ -144,8 +127,16 @@
                         <div class="result-badges">
                             <span class="badge badge-source badge-{{ doc.source|lower }}">{{ doc.source }}</span>
                             <span class="badge badge-sentiment badge-{{ doc.sentiment }}">
-                                {{ doc.sentiment }} ({{ "%.2f"|format(doc.sentiment_score) }})
+                                {{ doc.sentiment }}
                             </span>
+                            {% if doc.emotion and doc.emotion != 'neutral' %}
+                            <span class="badge badge-emotion badge-emo-{{ doc.emotion }}">
+                                {{ doc.emotion }}
+                            </span>
+                            {% endif %}
+                            {% if doc.subjectivity == 'opinionated' %}
+                            <span class="badge badge-subjectivity">opinionated</span>
+                            {% endif %}
                         </div>
                     </div>
                     {% if doc.date %}
@@ -164,92 +155,125 @@
                 {% endfor %}
             </div>
 
-            <!-- Pagination -->
             {% if total_pages > 1 %}
             <div class="pagination">
                 {% if page > 1 %}
-                <a href="/search?q={{ query }}&page={{ page - 1 }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">&laquo; Previous</a>
+                <a href="/search?q={{ query }}&page={{ page - 1 }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}{% if active_emotion %}&emotion={{ active_emotion }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">&laquo; Previous</a>
                 {% endif %}
-
                 <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
-
                 {% if page < total_pages %}
-                <a href="/search?q={{ query }}&page={{ page + 1 }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">Next &raquo;</a>
+                <a href="/search?q={{ query }}&page={{ page + 1 }}{% for s in active_sources %}&source={{ s }}{% endfor %}{% if active_sentiment %}&sentiment={{ active_sentiment }}{% endif %}{% if active_emotion %}&emotion={{ active_emotion }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">Next &raquo;</a>
                 {% endif %}
             </div>
             {% endif %}
         </main>
+
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const sentimentFacets = {{ sentiment_facets | tojson }};
-        const sourceFacets = {{ source_facets | tojson }};
+        var sentimentFacets = {{ sentiment_facets | tojson }};
+        var sourceFacets = {{ source_facets | tojson }};
+        var emotionFacets = {{ emotion_facets | tojson }};
+        var textColor = '#6e6e80';
+        var gridColor = 'rgba(0,0,0,0.06)';
+        var cardBg = '#ffffff';
 
-        const sentimentColors = {
-            positive: '#4CAF50',
-            negative: '#F44336',
-            neutral: '#FFC107'
+        var sentimentColors = {
+            positive: '#10b981',
+            negative: '#ef4444',
+            neutral: '#f59e0b'
         };
 
-        const sourceColors = {
+        var emotionColors = {
+            excitement: '#f59e0b',
+            concern: '#8b5cf6',
+            anger: '#ef4444',
+            neutral: '#94a3b8'
+        };
+
+        var sourceColors = {
             Reddit: '#FF4500',
             YouTube: '#FF0000',
             Twitter: '#1DA1F2',
             Quora: '#B92B27'
         };
-        const fallbackColors = ['#2196F3', '#9C27B0', '#009688', '#795548', '#607D8B'];
+        var fallbackColors = ['#6366f1', '#8b5cf6', '#06b6d4', '#84cc16', '#64748b'];
 
-        // Sentiment doughnut chart
-        const sentimentCanvas = document.getElementById('sentimentChart');
-        if (sentimentCanvas) {
-            const labels = Object.keys(sentimentFacets).filter(k => sentimentFacets[k] > 0);
-            const data = labels.map(k => sentimentFacets[k]);
-            const colors = labels.map(k => sentimentColors[k] || '#999999');
+        Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
 
-            new Chart(sentimentCanvas, {
+        var tooltipStyle = {
+            backgroundColor: '#1a1a2e',
+            titleFont: { weight: '600' },
+            bodyFont: { size: 13 },
+            padding: 12,
+            cornerRadius: 8
+        };
+
+        function makeDoughnut(canvasId, facets, colorMap) {
+            var canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            var labels = Object.keys(facets).filter(function(k) { return facets[k] > 0; });
+            var data = labels.map(function(k) { return facets[k]; });
+            var colors = labels.map(function(k) { return colorMap[k] || '#94a3b8'; });
+
+            new Chart(canvas, {
                 type: 'doughnut',
                 data: {
-                    labels: labels.map(l => l.charAt(0).toUpperCase() + l.slice(1)),
+                    labels: labels.map(function(l) { return l.charAt(0).toUpperCase() + l.slice(1); }),
                     datasets: [{
                         data: data,
                         backgroundColor: colors,
-                        borderWidth: 2,
-                        borderColor: '#fff'
+                        borderWidth: 3,
+                        borderColor: cardBg,
+                        hoverOffset: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '62%',
                     plugins: {
-                        tooltip: {
+                        tooltip: Object.assign({}, tooltipStyle, {
                             callbacks: {
                                 label: function (ctx) {
-                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                                    const pct = ((ctx.raw / total) * 100).toFixed(1);
+                                    var total = ctx.dataset.data.reduce(function(a, b) { return a + b; }, 0);
+                                    var pct = ((ctx.raw / total) * 100).toFixed(1);
                                     return ctx.label + ': ' + ctx.raw + ' (' + pct + '%)';
                                 }
                             }
-                        },
+                        }),
                         legend: {
                             position: 'bottom',
-                            labels: { padding: 16, usePointStyle: true }
+                            labels: {
+                                padding: 16,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                color: textColor,
+                                font: { size: 12, weight: '500' }
+                            }
                         }
                     }
                 }
             });
         }
 
+        // Sentiment doughnut
+        makeDoughnut('sentimentChart', sentimentFacets, sentimentColors);
+
+        // Emotion doughnut
+        makeDoughnut('emotionChart', emotionFacets, emotionColors);
+
         // Source horizontal bar chart
-        const sourceCanvas = document.getElementById('sourceChart');
+        var sourceCanvas = document.getElementById('sourceChart');
         if (sourceCanvas) {
-            const sorted = Object.entries(sourceFacets)
-                .filter(([, v]) => v > 0)
-                .sort((a, b) => b[1] - a[1]);
-            const labels = sorted.map(([k]) => k);
-            const data = sorted.map(([, v]) => v);
-            let fIdx = 0;
-            const colors = labels.map(k => {
+            var sorted = Object.entries(sourceFacets)
+                .filter(function(e) { return e[1] > 0; })
+                .sort(function(a, b) { return b[1] - a[1]; });
+            var sLabels = sorted.map(function(e) { return e[0]; });
+            var sData = sorted.map(function(e) { return e[1]; });
+            var fIdx = 0;
+            var sColors = sLabels.map(function(k) {
                 if (sourceColors[k]) return sourceColors[k];
                 return fallbackColors[fIdx++ % fallbackColors.length];
             });
@@ -257,12 +281,13 @@
             new Chart(sourceCanvas, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: sLabels,
                     datasets: [{
-                        data: data,
-                        backgroundColor: colors,
-                        borderRadius: 4,
-                        borderSkipped: false
+                        data: sData,
+                        backgroundColor: sColors,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barPercentage: 0.7
                     }]
                 },
                 options: {
@@ -271,22 +296,29 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: {
+                        tooltip: Object.assign({}, tooltipStyle, {
                             callbacks: {
                                 label: function (ctx) {
                                     return ctx.raw + ' results';
                                 }
                             }
-                        }
+                        })
                     },
                     scales: {
                         x: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Number of Results' },
-                            ticks: { precision: 0 }
+                            title: {
+                                display: true,
+                                text: 'Number of Results',
+                                color: textColor,
+                                font: { size: 11, weight: '500' }
+                            },
+                            ticks: { precision: 0, color: textColor, font: { size: 11 } },
+                            grid: { color: gridColor }
                         },
                         y: {
-                            grid: { display: false }
+                            grid: { display: false },
+                            ticks: { color: textColor, font: { size: 12, weight: '500' } }
                         }
                     }
                 }

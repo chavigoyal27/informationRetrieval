@@ -1,20 +1,22 @@
 """
-Index the balanced corpus into Apache Solr.
+Index the corpus into Apache Solr using pre-computed classification results.
 
-Reads corpus_balanced_1to1.csv, computes VADER sentiment for each record,
-and sends documents to Solr in batches via pysolr.
+Joins corpus_balanced_1to1.csv (url, title, date) with
+classification_results.csv (subjectivity, polarity, emotion) on id,
+and indexes the merged documents into Solr.
 """
 
 import csv
+import re
 import sys
 import time
 from datetime import datetime
-import re
+
 import pysolr
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 SOLR_URL = "http://localhost:8983/solr/opinions"
 CORPUS_PATH = "data/final_corpus/corpus_balanced_1to1.csv"
+CLASSIFICATION_PATH = "data/analysis/classification_results.csv"
 BATCH_SIZE = 500
 
 
@@ -23,10 +25,8 @@ def parse_date(date_str):
     if not date_str or date_str.strip() == "":
         return None
     date_str = date_str.strip()
-    # Already ISO with timezone
     if date_str.endswith("Z"):
         return date_str
-    # Try common formats
     for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d", "%m/%d/%Y", "%B %d, %Y"):
         try:
             dt = datetime.strptime(date_str, fmt)
@@ -35,26 +35,25 @@ def parse_date(date_str):
             continue
     return None
 
+
 def clean_for_dedup(t):
     t = t.lower()
-    t = re.sub(r"#\w+", "", t)        # remove hashtags
-    t = re.sub(r"[^\w\s]", "", t)     # remove punctuation
+    t = re.sub(r"#\w+", "", t)
+    t = re.sub(r"[^\w\s]", "", t)
     t = re.sub(r"\s+", " ", t).strip()
     return t
+
 
 def is_title_like(text, title):
     if not text or not title:
         return False
-    
-    t1 = clean_for_dedup(text)
-    t2 = clean_for_dedup(title)
+    return clean_for_dedup(text) == clean_for_dedup(title)
 
-    return t1 == t2
+
 def main():
     print("Connecting to Solr...")
     solr = pysolr.Solr(SOLR_URL, always_commit=False, timeout=30)
 
-    # Verify connection
     try:
         solr.ping()
         print("Solr connection OK")
@@ -64,13 +63,17 @@ def main():
         print("Make sure Solr is running: docker compose up -d")
         sys.exit(1)
 
-    # Clear existing data
     print("Clearing existing index...")
     solr.delete(q="*:*")
     solr.commit()
 
-    # Initialize VADER
-    analyzer = SentimentIntensityAnalyzer()
+    # Load classification results into a lookup by id
+    print(f"Loading classification results from {CLASSIFICATION_PATH}...")
+    classification = {}
+    with open(CLASSIFICATION_PATH, "r", encoding="utf-8", errors="replace") as f:
+        for row in csv.DictReader(f):
+            classification[row["id"]] = row
+    print(f"  Loaded {len(classification):,} classification records")
 
     print(f"Reading corpus from {CORPUS_PATH}...")
     docs = []
@@ -85,62 +88,61 @@ def main():
             total += 1
             text = row.get("text", "").strip()
             title = row.get("title", "").strip()
+            row_id = row.get("id", "")
 
-            # ❌ skip empty text
             if not text:
                 skipped += 1
                 continue
 
-            # 🔥 NEW FIX: skip title-as-comment
             if is_title_like(text, title):
                 skipped += 1
                 continue
-            
+
             if len(text.split()) < 4:
                 skipped += 1
                 continue
-            clean_text = clean_for_dedup(text)
 
+            clean_text = clean_for_dedup(text)
             if clean_text in seen_texts:
                 skipped += 1
                 continue
-
             seen_texts.add(clean_text)
-            # Compute VADER sentiment
-            scores = analyzer.polarity_scores(text)
-            compound = scores["compound"]
-            if compound >= 0.05:
-                sentiment = "positive"
-            elif compound <= -0.05:
-                sentiment = "negative"
-            else:
-                sentiment = "neutral"
+
+            # Look up classification results for this id
+            cls = classification.get(row_id, {})
+            polarity = cls.get("polarity", "neutral")
+            polarity_score = float(cls.get("polarity_score", 0))
+            subjectivity = cls.get("subjectivity", "neutral")
+            subjectivity_score = float(cls.get("subjectivity_score", 0))
+            emotion = cls.get("emotion", "neutral")
+            emotion_score = float(cls.get("emotion_score", 0))
 
             doc = {
-                "id": row["id"],
+                "id": row_id,
                 "source": row.get("source", ""),
                 "url": row.get("url", ""),
-                "title": row.get("title", ""),
+                "title": title,
                 "text": text,
-                "sentiment": sentiment,
-                "sentiment_score": round(compound, 4),
+                "sentiment": polarity,
+                "sentiment_score": round(polarity_score, 4),
+                "subjectivity": subjectivity,
+                "subjectivity_score": round(subjectivity_score, 4),
+                "emotion": emotion,
+                "emotion_score": round(emotion_score, 4),
             }
 
-            # Parse date if available
             parsed_date = parse_date(row.get("date", ""))
             if parsed_date:
                 doc["date"] = parsed_date
 
             docs.append(doc)
 
-            # Send batch
             if len(docs) >= BATCH_SIZE:
                 solr.add(docs)
                 indexed += len(docs)
                 print(f"  Indexed {indexed}/{total} records...")
                 docs = []
 
-    # Final batch
     if docs:
         solr.add(docs)
         indexed += len(docs)
@@ -148,7 +150,6 @@ def main():
     solr.commit()
     print(f"\nDone! Indexed {indexed} documents ({skipped} skipped, {total} total rows)")
 
-    # Verify
     results = solr.search("*:*", rows=0)
     print(f"Solr reports {results.hits} documents in the index")
 

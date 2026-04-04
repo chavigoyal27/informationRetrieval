@@ -1,0 +1,56 @@
+# ================================
+# CORE AI TERMINOLOGY
+# ================================
+AI, artificial intelligence
+ML, machine learning
+LLM, large language model
+GPT, generative pre-trained transformer
+chatgpt, gpt, chatbot, ai assistant, ai tool
+
+# ================================
+# SENTIMENT / OPINION (CRITICAL)
+# ================================
+good, beneficial, helpful, useful, positive, effective, advantageous
+bad, harmful, negative, dangerous, risky, unsafe, problematic
+improve, enhance, boost, increase, support
+harm, damage, hurt, negatively affect, adverse effect
+
+# ================================
+# USER INTENT (VERY IMPORTANT 🔥)
+# ================================
+good or bad, pros and cons, advantages and disadvantages
+is it good, is it bad, is it harmful, should i use
+safe, not harmful, secure
+
+# ================================
+# EDUCATION CONTEXT
+# ================================
+student, learner, pupil
+school, education, learning, study, academic
+cheating, plagiarism, academic dishonesty
+
+# ================================
+# HEALTH & WELLBEING
+# ================================
+health, wellbeing, wellness, mental health, psychological health
+stress, anxiety, depression, mental strain
+
+# ================================
+# JOB / SOCIETY IMPACT
+# ================================
+job loss, unemployment, job displacement, automation impact
+bias, unfairness, discrimination
+privacy, data privacy, data security, security risk
+
+# ================================
+# GENERAL ACTIONS / USAGE
+# ================================
+use, usage, application, adoption
+help, assist, support, aid
+affect, impact, influence
+
+# ================================
+# CHATGPT / AI USAGE CONTEXT
+# ================================
+chatgpt use, using chatgpt, ai usage, ai application
+ai in education, ai in healthcare, ai in society

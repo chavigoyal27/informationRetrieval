@@ -78,6 +78,7 @@ def search():
     # Collect filter parameters
     sources = request.args.getlist("source")
     sentiment = request.args.get("sentiment", "")
+    emotion = request.args.get("emotion", "")
     date_from = request.args.get("date_from", "")
     date_to = request.args.get("date_to", "")
     page = max(1, int(request.args.get("page", 1)))
@@ -89,6 +90,8 @@ def search():
         fq_list.append(f"({source_filter})")
     if sentiment:
         fq_list.append(f'sentiment:"{sentiment}"')
+    if emotion:
+        fq_list.append(f'emotion:"{emotion}"')
     if date_from or date_to:
         d_from = date_from + "T00:00:00Z" if date_from else "*"
         d_to = date_to + "T23:59:59Z" if date_to else "*"
@@ -104,7 +107,7 @@ def search():
         "mm": "2<75%",
         "start": start,
         "rows": RESULTS_PER_PAGE,
-        "fl": "id,source,url,title,text,date,sentiment,sentiment_score",
+        "fl": "id,source,url,title,text,date,sentiment,sentiment_score,subjectivity,subjectivity_score,emotion,emotion_score",
         "fq": fq_list,
         "hl": "true",
         "hl.fl": "text",
@@ -135,6 +138,7 @@ def search():
     facet_fields = results.facets.get("facet_fields", {}) if hasattr(results, "facets") else {}
     source_facets = parse_facet_pairs(facet_fields.get("source", []))
     sentiment_facets = parse_facet_pairs(facet_fields.get("sentiment", []))
+    emotion_facets = parse_facet_pairs(facet_fields.get("emotion", []))
 
     # Build results list
     docs = []
@@ -158,6 +162,10 @@ def search():
             "date": doc.get("date", ""),
             "sentiment": doc.get("sentiment", ""),
             "sentiment_score": doc.get("sentiment_score", 0),
+            "subjectivity": doc.get("subjectivity", ""),
+            "subjectivity_score": doc.get("subjectivity_score", 0),
+            "emotion": doc.get("emotion", ""),
+            "emotion_score": doc.get("emotion_score", 0),
         })
 
     # Word cloud from current page texts
@@ -175,8 +183,10 @@ def search():
         total_pages=total_pages,
         source_facets=source_facets,
         sentiment_facets=sentiment_facets,
+        emotion_facets=emotion_facets,
         active_sources=sources,
         active_sentiment=sentiment,
+        active_emotion=emotion,
         date_from=date_from,
         date_to=date_to,
         wordcloud_img=wordcloud_img,
