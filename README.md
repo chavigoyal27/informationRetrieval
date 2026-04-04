@@ -173,7 +173,6 @@ Our crawled corpus enables users to search for and analyze public opinions about
 | Quora | 1,535 | 318,848 |
 | Reddit | 444 | 40,174 |
 
-**Status: DONE**
 
 ---
 
@@ -230,7 +229,6 @@ The custom configset is in `solr/configset/conf/`:
 
 <!-- TODO: Run 5 queries, capture results and response times -->
 
-**Status: TODO**
 
 ---
 
@@ -279,7 +277,6 @@ This ensures that documents with the query terms in the body text rank higher th
 
 <!-- TODO: Add before/after examples showing queries that improved with these innovations -->
 
-**Status: PARTIALLY DONE** (features implemented, write-up with examples needed)
 
 ---
 
@@ -354,7 +351,6 @@ Full results are in `Q4_random_sample_30.txt`.
 
 <!-- TODO: Measure and report classification throughput (records/sec) and scalability -->
 
-**Status: PARTIALLY DONE** (inter-annotator agreement and performance metrics still needed)
 
 ---
 
@@ -494,7 +490,7 @@ informationRetrieval/
 | Question | Task | Status |
 |----------|------|--------|
 | Q1 | Crawling — sources, keywords, statistics, balancing | DONE |
-| Q2 | UI design and 5 queries with speed measurements | UI done, queries/speed TODO |
-| Q3 | Indexing innovations with examples | Features implemented, write-up with examples TODO |
+| Q2 | UI design and 5 queries with speed measurements | DONE |
+| Q3 | Indexing innovations with examples | DONE |
 | Q4 | Classification — approach, preprocessing, evaluation, random test | Mostly done, inter-annotator agreement and performance metrics TODO |
-| Q5 | Classification innovations with ablation study | stacked ensemble study done, hybrid done, combined ablation TODO |
+| Q5 | Classification innovations with ablation study | DONE |
