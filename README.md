@@ -497,4 +497,4 @@ informationRetrieval/
 | Q2 | UI design and 5 queries with speed measurements | UI done, queries/speed TODO |
 | Q3 | Indexing innovations with examples | Features implemented, write-up with examples TODO |
 | Q4 | Classification — approach, preprocessing, evaluation, random test | Mostly done, inter-annotator agreement and performance metrics TODO |
-| Q5 | Classification innovations with ablation study | stacked ensemble study done, sarcasm detection,etc. TODO |
+| Q5 | Classification innovations with ablation study | stacked ensemble study done, hybrid done, combined ablation TODO |
