@@ -439,6 +439,16 @@ Ablation Study between RoBERTa, BERTweet, ReviewBERT. Soft voting ensemble and m
 python innovations/ensemble_classification.py
 ```
 
+
+---
+
+### Run Hybrid Classification
+
+```bash
+python innovations/hybrid.py
+```
+
+
 ---
 
 ## Project Structure
@@ -465,7 +475,8 @@ informationRetrieval/
 │   └── final_corpus/           # Balanced corpus files for indexing
 ├── data_scrapping_scripts/     # Crawling scripts (one per source)
 ├── innovations/                # Advanced model ablation studies
-│   └── ensemble_classification.py # Deep learning ensemble combining RoBERTa, BERTweet, ReviewBERT (soft voting, meta stacking)
+│   ├── ensemble_classification.py # Deep learning ensemble combining RoBERTa, BERTweet, ReviewBERT (soft voting, meta stacking)
+|   └── hybrid.py               # Hybrid Classification
 ├── tools/                      # Post-processing and indexing utilities
 ├── preprocess.py               # Text preprocessing (run once after consolidation)
 ├── classify.py                 # 3-stage classification pipeline
