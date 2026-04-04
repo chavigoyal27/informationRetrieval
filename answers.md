@@ -190,10 +190,3 @@ On the remaining 28,000+ unlabelled records, we extracted a random sample of 30 
 | **3. Subjectivity Filter + M3 (ReviewBERT Forum)** | 0.4450 (44.5%) | |
 | **4. INNOVATION 1: Soft Voting Ensemble** | 0.5050 (50.5%) | |
 | **5. INNOVATION 2: Stacking Meta** | **0.6700 (67.0%)** | *State-of-the-Art result* |
-
-### ABSA Test Set results (80/20 split)
-
-| Model | Accuracy |
-| :--- | :--- |
-| **Baseline(ROBERTA)** | 0.3850 (38.5%) |
-| **ABSA** | 0.5150 (51.5%) |
