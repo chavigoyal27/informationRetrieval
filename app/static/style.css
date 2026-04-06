@@ -35,6 +35,7 @@
     --badge-youtube: #FF0000;
     --badge-twitter: #1DA1F2;
     --badge-quora: #B92B27;
+    --badge-linkedin: #0A66C2;
     --highlight: rgba(16, 163, 127, 0.15);
     /* Emotion badge colors */
     --badge-excitement-bg: #fef3c7;
@@ -179,7 +180,7 @@ a:hover { color: var(--accent-hover); }
     color: var(--text-tertiary);
 }
 .search-row button {
-    padding: 10px 22px;
+    padding: 10px 14px;
     background: var(--accent);
     color: white;
     border: none;
@@ -188,6 +189,9 @@ a:hover { color: var(--accent-hover); }
     font-size: 0.9rem;
     font-weight: 600;
     font-family: var(--font);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: background var(--transition);
 }
 .search-row button:hover { background: var(--accent-hover); }
@@ -604,6 +608,7 @@ a:hover { color: var(--accent-hover); }
 .badge-youtube { background: var(--badge-youtube); }
 .badge-twitter { background: var(--badge-twitter); }
 .badge-quora { background: var(--badge-quora); }
+.badge-linkedin { background: var(--badge-linkedin); }
 .badge-sentiment { border: none; }
 .badge-positive { color: var(--badge-positive-text); background: var(--badge-positive-bg); }
 .badge-negative { color: var(--badge-negative-text); background: var(--badge-negative-bg); }

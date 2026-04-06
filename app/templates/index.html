@@ -15,7 +15,7 @@
         <form action="/search" method="GET" class="search-bar-unified">
             <div class="search-row">
                 <input type="text" name="q" placeholder="Search opinions about AI..." autofocus>
-                <button type="submit">Search</button>
+                <button type="submit" aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
             </div>
             <div class="filters-row">
                 <div class="filter-inline-group">
@@ -24,6 +24,7 @@
                     <label><input type="checkbox" name="source" value="YouTube"> YouTube</label>
                     <label><input type="checkbox" name="source" value="Twitter"> Twitter</label>
                     <label><input type="checkbox" name="source" value="Quora"> Quora</label>
+                    <label><input type="checkbox" name="source" value="LinkedIn"> LinkedIn</label>
                 </div>
                 <span class="filter-separator"></span>
                 <div class="filter-inline-group">
@@ -69,14 +70,9 @@
         <div class="landing-suggestions">
             <h3 class="suggestions-title">Try searching for</h3>
             <div class="suggestions-list">
-                <a href="/search?q=ChatGPT" class="suggestion-chip">ChatGPT</a>
-                <a href="/search?q=AI+replacing+jobs" class="suggestion-chip">AI replacing jobs</a>
-                <a href="/search?q=machine+learning" class="suggestion-chip">machine learning</a>
-                <a href="/search?q=OpenAI" class="suggestion-chip">OpenAI</a>
-                <a href="/search?q=AI+ethics" class="suggestion-chip">AI ethics</a>
-                <a href="/search?q=deepfake" class="suggestion-chip">deepfake</a>
-                <a href="/search?q=AI+in+education" class="suggestion-chip">AI in education</a>
-                <a href="/search?q=copilot" class="suggestion-chip">copilot</a>
+                <a href="/search?q=Harmful+effects+of+chatgpt" class="suggestion-chip">Harmful effects of chatgpt</a>
+                <a href="/search?q=Classroom+AI" class="suggestion-chip">Classroom AI</a>
+                <a href="/search?q=AI+in+education+ethics" class="suggestion-chip">AI in education ethics</a>
             </div>
         </div>
     </div>

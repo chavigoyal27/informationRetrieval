@@ -110,11 +110,13 @@ def search():
         "fl": "id,source,url,title,text,date,sentiment,sentiment_score,subjectivity,subjectivity_score,emotion,emotion_score",
         "fq": fq_list,
         "hl": "true",
+        "defType": "edismax",
+        "boost": "if(query({!v='source:YouTube'}),0.85,1)",
         "hl.fl": "text",
-        "hl.snippets": 1,              # 🔥 ONLY ONE snippet
-        "hl.fragsize": 300,            # 🔥 bigger, cleaner context
-        "hl.mergeContiguous": "true",  # 🔥 prevents overlap duplication
-        "hl.method": "unified",        # 🔥 better snippet quality
+        "hl.snippets": 1,           
+        "hl.fragsize": 300,           
+        "hl.mergeContiguous": "true",  
+        "hl.method": "unified",        
         "hl.simple.pre": "<mark>",
         "hl.simple.post": "</mark>",
     }
@@ -153,11 +155,16 @@ def search():
             text = doc.get("text", "")
             snippet = text[:300] + "..." if len(text) > 300 else text
 
+        title = doc.get("title", "")
+        if not title:
+            words = doc.get("text", "").split()
+            title = " ".join(words[:8]) + ("..." if len(words) > 8 else "") if words else "No Title"
+
         docs.append({
             "id": doc_id,
             "source": doc.get("source", ""),
             "url": doc.get("url", ""),
-            "title": doc.get("title", "No Title"),
+            "title": title,
             "snippet": snippet,
             "date": doc.get("date", ""),
             "sentiment": doc.get("sentiment", ""),
