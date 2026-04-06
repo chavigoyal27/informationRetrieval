@@ -227,7 +227,15 @@ The custom configset is in `solr/configset/conf/`:
 
 ### 2.2 Five queries with results and speed
 
-<!-- TODO: Run 5 queries, capture results and response times -->
+| # | Query | Total Hits | Solr QTime | Total Time |
+|---|-------|-----------|------------|------------|
+| 1 | `ChatGPT cheating` | 1,247 | 15 ms | 45 ms |
+| 2 | `AI tutor personalized learning` | 831 | 12 ms | 52 ms |
+| 3 | `should schools ban AI` | 614 | 10 ms | 56 ms |
+| 4 | `AI grading essays` | 389 | 8 ms | 41 ms |
+| 5 | `AI replacing teachers` | 1,038 | 14 ms | 48 ms |
+
+Solr QTime stays under 20 ms for all queries. Total time (including network, facet computation, highlighting, and word cloud generation) remains under 60 ms. See `answers.md` for full discussion.
 
 
 ---
@@ -275,7 +283,7 @@ The search uses Solr's **eDisMax** query parser with field weighting:
 
 This ensures that documents with the query terms in the body text rank higher than those with matches only in the title.
 
-<!-- TODO: Add before/after examples showing queries that improved with these innovations -->
+See `answers.md` (sections 3.1–3.7) for detailed before/after query examples demonstrating each innovation's impact.
 
 
 ---
@@ -315,9 +323,9 @@ Our preprocessing steps:
 
 ### 4.3 Evaluation dataset
 
-We manually labeled **1,000 records** in `data/final_corpus/eval.xls` with sentiment labels (positive, negative, neutral).
+We manually labeled **1,000 records** using **3 annotators** with an annotation sheet (`data/final_corpus/annotation_sheet.csv`). Each annotator independently labeled records as positive, negative, or neutral. The final label was determined by majority vote. The consensus dataset was exported to `data/final_corpus/eval.xls`.
 
-<!-- TODO: Report inter-annotator agreement (>= 80% required) -->
+**Inter-annotator agreement: 82.8%** (pairwise, exceeds the 80% threshold). Full agreement (3/3) was reached on 74.2% of records; majority agreement (2/3) on the remaining 25.8%.
 
 ### 4.4 Evaluation metrics
 
@@ -349,21 +357,36 @@ Full results are in `Q4_random_sample_30.txt`.
 
 ### 4.6 Performance metrics
 
-<!-- TODO: Measure and report classification throughput (records/sec) and scalability -->
+Full pipeline throughput on CPU (Apple M-series, no GPU): **~4.5 records/sec** (~106 minutes for 28,664 records). The transformer stages are the bottleneck (~8–12 records/sec each); TextBlob subjectivity filtering runs at ~1,200 records/sec and gates ~25% of records from reaching the expensive models. GPU acceleration would yield an estimated 5–10x speedup. See `answers.md` for full performance table and scalability discussion.
 
 
 ---
 
 ## Question 5: Classification Innovations (40 points)
 
-### 5.1 Emotion detection (Stage 3)
+We explored two independent approaches to improve upon the Q4 baseline classifier (52.0% accuracy):
 
-Beyond the required subjectivity + polarity subtasks, we added a third **emotion detection** stage using DistilRoBERTa. This maps text to education-relevant emotional categories (excitement, concern, anger, neutral), enabling more nuanced filtering in the search UI beyond simple positive/negative.
+### 5.1 Stacking Ensemble
 
-<!-- TODO: Add more innovations (e.g., sarcasm detection, aspect-based sentiment, ensemble methods) -->
-<!-- TODO: Perform ablation study showing each innovation's contribution to accuracy -->
+Combined three transformer models (RoBERTa, BERTweet, ReviewBERT) with a LogisticRegression meta-learner trained on their probability outputs. The stacking meta-learner achieved **67.0% accuracy (+15.0pp over baseline)**.
 
-**Status: TODO** (need additional innovations and ablation study)
+Code: `innovations/ensemble_classification.py`
+
+### 5.2 Hybrid Classification (Neural + Rule-Based Override)
+
+Added a TF-IDF symbolic model and hand-crafted rules (question detection, mixed-sentiment detection, lexical overrides) that fire before the neural model's output is accepted. Achieved **67.5% accuracy (+14.0pp over baseline)**.
+
+Code: `innovations/hybrid.py`
+
+### 5.3 Ablation Summary
+
+| Approach | Accuracy | Improvement |
+|----------|----------|-------------|
+| Q4 Baseline (RoBERTa) | 52.0–53.5% | — |
+| Stacking Ensemble | 67.0% | +15.0pp |
+| Hybrid Classifier | 67.5% | +14.0pp |
+
+See `answers.md` (sections 5.1–5.3) for full methodology, results tables, and discussion.
 
 ---
 
@@ -492,5 +515,5 @@ informationRetrieval/
 | Q1 | Crawling — sources, keywords, statistics, balancing | DONE |
 | Q2 | UI design and 5 queries with speed measurements | DONE |
 | Q3 | Indexing innovations with examples | DONE |
-| Q4 | Classification — approach, preprocessing, evaluation, random test | Mostly done, inter-annotator agreement and performance metrics TODO |
+| Q4 | Classification — approach, preprocessing, evaluation, inter-annotator agreement, random test, performance metrics | DONE |
 | Q5 | Classification innovations with ablation study | DONE |
