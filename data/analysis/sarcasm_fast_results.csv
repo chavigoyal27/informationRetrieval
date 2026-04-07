@@ -1,0 +1,201 @@
+id,text,true_label,predicted_label,correct,sarcasm_prob,adjusted,base_sentiment
+1,i also think there are a ton of fun ideas from the gpt-4 era that are worth revisiting. what’s the opus 4.5 version of autogpt? if you’re a college student or a night/weekend hacker or something go chase those fun &amp; weird ideas! many high-payoff ideas waiting to be discovered.,neutral,positive,False,0.268,False,positive
+2,the omitted part is when AGENTS scrape data from other AGENT ai created slop that is fabricated.... the day no human created content exists to learn from. brilliant dude,negative,negative,True,0.553,False,negative
+3,@Ilovepie31 @TenSNeo He is not gojo for sure but that lesson was important hence: it helped him unlock a domain you know.. the thing that's a reflection of your own sense of self... It was strengthening his own sense of self and teaching him to value life more . 266 doesn't contradict that,neutral,positive,False,0.1,False,positive
+4,"Or here's a much more brilliant idea: don't do it at all!!! There's a reason we have Sci-Fi movies, to give us lessons to not make such life killing regret later on.",neutral,neutral,True,0.081,False,neutral
+5,"They're goin' up, up, up, it's their moment We know together they're glowin' Gonna be, gonna be golden!!! 🎵💛🇰🇷 💜♥️💚",neutral,positive,False,0.106,False,positive
+6,"GPT detektors are trash, there is no way to 100% detect if text was created by AI.",negative,negative,True,0.291,False,negative
+7,"Experimental wildfire predictions made by AI algorithms have been remarkably accurate with less detection time. Software-defined cameras (SDCs) assisted with AI can predict forest fires locally by detecting smoke. Cal Fire says 40% of fires since July 10 have been detected by AI before a 911 call was received – and the technology is continuing to learn and improve. The system is looking for changes on the horizon, said Alert California's Brian Norton, who spent 35 years in the fire service. Cal ",neutral,negative,False,0.731,True,positive
+8,in description he said,neutral,neutral,True,0.179,False,neutral
+9,this was pretty eye opening for me,neutral,positive,False,0.14,False,positive
+10,"Day 4 of learning ML: Learned about Gradient Descent , an optimization algorithm used to minimize the cost function by iteratively updating parameters (w, b) in the direction of the negative gradient to find the best model. #MachineLearning #Day4✍🏼",positive,positive,True,0.185,False,positive
+11,Ai are taking over the world and I will not let that happen!~,negative,negative,True,0.564,False,negative
+12,im guessing a way to end the introduction speech,neutral,neutral,True,0.12,False,neutral
+13,"And the cycle of nonsense is complete, with no one learning anything.",negative,negative,True,0.397,False,negative
+14,@yoonzino444 can finish before the dl po!,neutral,neutral,True,0.164,False,neutral
+15,Nobody will have jobs in 2 years so they won’t have to Worry about asking Alexa anything. This dude is clueless,negative,negative,True,0.595,False,negative
+16,"On video, he's admitting he's cheating. Thanks for self-snitching. This school needs to fail him.",neutral,negative,False,0.303,False,negative
+17,"Nope. You think people have metal issues now, it will get worse. God, it makes me so sad for children being raised now😢",neutral,negative,False,0.312,False,negative
+18,i wish i knew about these tools earlier,positive,negative,False,0.442,False,negative
+19,I saw it as hentai for a second,neutral,neutral,True,0.039,False,neutral
+20,"My teacher accused me of AI and said it was ""unreliable"", while the tool she used to check if my essay was AI was ChatGPT.",negative,negative,True,0.532,False,negative
+21,When Teachers actually become Smart:,positive,neutral,False,0.129,False,neutral
+22,"Artificial Intelligence Exploitation Prevention Act (AIEPA) Section 1. Short Title This Act may be cited as the “Artificial Intelligence Exploitation Prevention Act.” Section 2. Purpose The purpose of this Act is to: Protect individuals — including celebrities and private citizens — from exploitation through artificial intelligence. Prevent the creation and distribution of non-consensual AI-generated likenesses, voices, and identities. Establish criminal and civil penalties for misuse of AI tech",neutral,neutral,True,0.474,False,neutral
+23,Woah chill out teachers,positive,neutral,False,0.158,False,neutral
+24,Great approach and mindset - thanks 🙏,neutral,positive,False,0.065,False,positive
+25,Altman you're going to wreck this world.,negative,negative,True,0.185,False,negative
+26,Hindistan. Önce. Halkının. Beslenmesini sağlasın. Törenle. Aç. Kalarak. İntihar eden. İnsanlarını. Kutsuyor,neutral,neutral,True,0.153,False,neutral
+27,For this dumb woman now all the people who need help with ai will be fked,neutral,positive,False,0.704,True,negative
+28,"Welcome to this week's issue of your Ed News Brief with up-to-date developments in AI and education from global, policy, research, and school-level perspectives.",neutral,neutral,True,0.329,False,neutral
+29,Check out my latest AI writings: 30 Useful Prompts Related to Learning https://t.co/v34C2AkiND AI for Scrum Masters Guide https://t.co/f77yHdmov1 Applied Generative AI Instructor Guide https://t.co/qNiUVXGODq #AI #AILearning #AIWriting #AILove,neutral,neutral,True,0.29,False,neutral
+30,"You have two possibilities here. You can learn programming to understand that what we call AI isn't really anywhere near intelligence. On an evolutionary scale it's the equivalent of a slime mold. You can learn marketing to understand that marketing types have fed the general public a line of bullshit 1,000 Km in length.",negative,negative,True,0.377,False,negative
+31,"On this week’s Your Undivided Attention, Rebecca Winthrop has some answers. She and her team at Brookings just released ""A New Direction for Students in an AI World,"" a report grounded in global conversations with the people closest to the problem: teachers, students, policymakers, and technologists.",neutral,positive,False,0.388,False,positive
+32,Hi I am from pakistan please can you tell me that which accent you are speaking like american accent english aur british accent english which accent you are speaking,neutral,neutral,True,0.051,False,neutral
+33,Teachers and student both will get addicted to AI and stop putting efforts to develop their own body and brains in long term. Earlier human brains were able to process larger numbers in brain and that is no longer available as computers can do things easily… same way in future things will go down without realising what human body capabilities lost.,negative,positive,False,0.702,True,negative
+34,He is an expert in everything. Just water,neutral,positive,False,0.594,False,positive
+35,"@thefrench8847 aye if i had to choose between an AI and myself to spend water on, i'd choose myself. on dirait presque que c'est ca le but de la discussion 🤔",negative,neutral,False,0.235,False,neutral
+36,Why He leve,neutral,neutral,True,0.045,False,neutral
+37,With the right prompts asking the right questions it could been all As,neutral,neutral,True,0.183,False,neutral
+38,"Be careful how you interpret the answers. I’m a tradesman. Best get your answers for electrical, plumbing and HVAC from the pros.",neutral,neutral,True,0.186,False,neutral
+39,"Anyone else just watch Sam Altman crash out on a podcast over the AI bubble lol, it's going to burst and hurt us all again.",negative,negative,True,0.368,False,negative
+40,"@LTX-x7r ai is worse for the environment than phones. Like what, do you want me to live in the woods scavenging for acorns or something??? I didn’t even buy this phone, I got it as a birthday present in sixth grade 5 years ago. Why r u judging me 4 using a phone by commenting using a phone???? 💀💀 (And I never said I was a “big planet lover” I was just saying that that’s part of why it’s so controversial, although I think everyone is a big planet lover? No i actually hate oxygen and flowers and s",negative,positive,False,0.834,True,negative
+41,Woah a professor using any half-baked already-disproven method to flunk some students? Colour me shocked🙄,neutral,negative,False,0.564,False,negative
+42,Sadly many of us had to go through the same school experience :( And thanks for encouragement :),neutral,negative,False,0.442,False,negative
+43,"Unfortunately it is a catch 22. We are saying AI can help learn if the student can judge what to pick from AI... How can students judge what's valuable if they are learning? AI is a good assistant to an expert, students, by definition, are not experts in the topic they are studying yet.",negative,negative,True,0.423,False,negative
+44,NO MORE CHILDREN SO NEED FOR ROBOTS,neutral,negative,False,0.094,False,negative
+45,"Actual educators, the people who bring in drag queens and show graphic porn to little kids while we get rid grades and testing because it's not fair to expect a student to learn...",neutral,negative,False,0.41,False,negative
+46,Haha stupid snitch,neutral,negative,False,0.079,False,negative
+47,"From faculty members finding ways to automate administrative heavy lifting to educators designing more inclusive curricula and workflows to free up time for #innovation, and students using Gemini as a personalized tutor to bridge learning gaps—the use cases are as diverse as the regions themselves.",positive,neutral,False,0.277,False,neutral
+48,Alphas don't have to read.,neutral,neutral,True,0.071,False,neutral
+49,"5:51 no, ww1 started in 1914",neutral,neutral,True,0.224,False,neutral
+50,Super innovative and a great implementation of the concept✨,neutral,positive,False,0.059,False,positive
+51,"I just read a reply to one of my discussion posts. I kid you not, it starts out ""Here is a casual and respectful response you could use:""",negative,neutral,False,0.084,False,neutral
+52,"Upside: $TTD +21% (OpenAI reportedly held early AD sales discussions with Trade Desk) $PDYN +18% (earnings, guidance) $BTAI +12% (announces Positive Phase 2 Topline Results from Columbia University-Led Study of BXCL501 for Treatment of Opioid Withdrawal) $VEEV +10% (earnings, guidance) $CBRL +8.2% (earnings, guidance) $AVGO +6.3% (earnings, guidance) $UAMY +5.3% (selected for Strategic Antimony Supply Chain Expansion Under DoW Initiative) Downside: $GO -26% (earnings, guidance) $PEPG -19% (U.S. ",neutral,neutral,True,0.328,False,neutral
+53,"From classroom concepts to real AI implementation. JMIETI, Radaur conducted a One-Week Training Program on Applied AI &amp; Machine Learning with hands-on industry use cases in collaboration with CodroidHub Pvt. Ltd. Building future-ready professionals. #JMIETI #education https://t.co/TT4a8KNpib",neutral,neutral,True,0.225,False,neutral
+54,"My teacher talked about it last Friday. At this point in the year, she says she can recognize our writing.",neutral,neutral,True,0.226,False,neutral
+55,The video mirrored,neutral,neutral,True,0.288,False,neutral
+56,Give your own personal perspective on the issue,neutral,neutral,True,0.065,False,neutral
+57,"If ur ""such a genius"", why do you have to cheat on an exam? Dumb c**t hope y get booted",neutral,negative,False,0.303,False,negative
+58,"@alexkehr Hi Alex, Currently a student at UC Davis building a AI powdered meeting scheduling platform, with many AI technologies like MCP, LangGraph, LangChain, Gemini, RAG, etc. And a few other projects as well. Have a 8 year old windows laptop, this would really help 😁🤞🏼",positive,positive,True,0.397,False,positive
+59,5. feature learning video where is ?,neutral,neutral,True,0.064,False,neutral
+60,Then let them live there lives travel and experience life then go to college lol,neutral,neutral,True,0.155,False,neutral
+61,This is very odd.,neutral,negative,False,0.551,False,negative
+62,that is the stupidest thing I've ever heard just put it in notepad and it instantly cleans it up,neutral,negative,False,0.222,False,negative
+63,not sure if i love or hate ai in school 🤔,neutral,negative,False,0.561,False,negative
+64,@h4rdiac_ i just gpt out of the hospital an hour ago. I had school today so it was after it,neutral,neutral,True,0.233,False,neutral
+65,What is meant by STATIONS ??!,neutral,neutral,True,0.049,False,neutral
+66,it is amazing ！the quality of generating-contents is so high!is it will be destroyed the services of helping students apply-to another university?!,positive,positive,True,0.131,False,positive
+67,#innovation #AIinEducation #ArtificialIntelligence #StudentSuccess #SmartLearning #AIForStudents #LearningWithAI #FutureOfLearning #DigitalEducation #MindfulAI,neutral,positive,False,0.052,False,positive
+68,"On Feb. 26 at 12:00 PM ET, MagicSchool and edWeb are hosting a live edLeader Panel on leading safe and responsible AI decisions in schools and districts.",neutral,neutral,True,0.183,False,neutral
+69,Hi Tony foltyn,neutral,neutral,True,0.03,False,neutral
+70,As a student of TDSB (Toronto). I would say it would be a great idea.,neutral,positive,False,0.053,False,positive
+71,i bundle of thankssssss,neutral,positive,False,0.145,False,positive
+72,I am afraid for the future,negative,negative,True,0.193,False,negative
+73,Just ues the pro mode on gemini then compare 😂 Gemini can beat CHATGPT full power on pro mode 😂😂😂,neutral,neutral,True,0.364,False,neutral
+74,"A lot of tools try to do this, but Ryne AI Humanizer actually gets the tone right.",positive,neutral,False,0.238,False,neutral
+75,Thats a very high paying job you cant just distance yourself because you hate ai. Like cmon your lucky to have a mom like that and have a roof over your head Lowkey you need to talk to your mom,neutral,negative,False,0.091,False,negative
+76,Hold on lemme just…. Ok thanks! I’ll use this for my essays later in the year!,positive,positive,True,0.317,False,positive
+77,this topic is so relevant right now,neutral,positive,False,0.076,False,positive
+78,He’s right sometimes AI doesn’t know what ITS doing,negative,neutral,False,0.096,False,neutral
+79,"But here's the real question: **Are we preparing students for an AI-integrated workforce, or are we playing catch-up?**",neutral,neutral,True,0.152,False,neutral
+80,"I’m assuming He’s melting down due to the amount student loans he’s still trying to pay off, on top of actually having to do the work and steady his ass off and grind countless hours and put in excruciatingly hard work in order to get the position he’s in, all for some 4th generation kids bypass all of that so effortlessly and gain the same position with less of a a fraction of work he put in. It’s sad but funny and I’m not on either side, it’s just in my opinion, kinda understandable seeing him",neutral,positive,False,0.671,True,negative
+81,Is it in Malaysia?,neutral,neutral,True,0.08,False,neutral
+82,MRP bolo bhaiya,neutral,neutral,True,0.121,False,neutral
+83,Po-Shen seller :D,neutral,positive,False,0.058,False,positive
+84,"Well, possibly her instructions do, but that's beside the point. She's not the one supposed to be learning English, I assume, and presumably you are. Using AI to sort out your grammar isn't learning; it's the equivalent of getting another person to do the work for you. That's called cheating: you are lying to your teacher, pretending to be better at the work than you really are, and if you tell yourself that it doesn't make any difference, really, then you are lying to yourself, too. The very mo",neutral,negative,False,0.462,False,negative
+85,"This is gonna sound very funny, but one of my teachers is actually encouraging my class to use ChatGPT. And it's going great, only catch is that it used to help and not do the full thing. It's awesome",positive,positive,True,0.169,False,positive
+86,Well she is dumb,neutral,negative,False,0.271,False,negative
+87,You can write good essays with Rephrasy AI. It a reliable ai humanizer tool you can depend on when it comes to writing.,neutral,positive,False,0.039,False,positive
+88,I like your video. But which AI is good for background to the study?,neutral,positive,False,0.055,False,positive
+89,@Danale I mostly use Copilot now instead of Wikipedia. I suspect the volunteers who censor/edit wiki pages are leftist professors with a lot of time on their hands.,positive,positive,True,0.664,True,negative
+90,"rubby AI is slow, purify-text is faster and works better",neutral,neutral,True,0.606,True,neutral
+91,He is my humanity’s teacher 💪,neutral,positive,False,0.049,False,positive
+92,"Artificial Intelligence offers a practical solution by simplifying tasks, improving accuracy, and enhancing productivity. In this video, I highlight how AI supports learning, research, content creation, and decision-making—helping individuals work smarter and more effectively.",positive,positive,True,0.245,False,positive
+93,"AI can be a powerful tool for inclusive education, but only if we build the evidence, involve the people these tools are meant to serve, and ask the hard questions about cost, bias, and sustainability before we scale.",positive,neutral,False,0.27,False,neutral
+94,"• A district layer with integrations and a knowledge graph that grounds AI in local policies, curriculum, and standards",neutral,neutral,True,0.154,False,neutral
+95,"@hunsucker_adam @speedcxla @SophieMe0ws @nocontextmemes You're not listening to anyone so here are 4 AI's (gpt, copilot, DS, grok), a math teacher, and a college math professors proving you're wrong https://t.co/5RVhfB9H0j https://t.co/Q4se3zCgW4 Anything else you have to say is either ignorance or ragebait, so I pray for the latter https://t.co/tCRQ93JJLC",neutral,negative,False,0.427,False,negative
+96,"Chile launches Latin America's first open-source AI language modelfst | AP News https://t.co/nP0nBeimBY Latam-GPT was developed with just $550,000 in funding. The subsequent versions will be trained on a supercomputer at the University of Tarapacá, which costs about $4.5 million. https://t.co/mpAxk80cmM",neutral,neutral,True,0.343,False,neutral
+97,"For academic purposes - Claude Sonnet 4.6 is far far far better than ChatGPT 5.2 on any given day. The multiple dimensions, the depth, the contextual understanding it brings in its responses is insane ! 🔥 💯 @AnthropicAI @claudeai @DarioAmodei @OpenAI @sama @ChatGPTapp",positive,positive,True,0.202,False,positive
+98,"""Its bad to steal, now i'm going to teach you how to not get caught stealing"".",neutral,negative,False,0.249,False,negative
+99,bruh i don't want to even watch this,neutral,negative,False,0.245,False,negative
+100,To all kids going to College or coming out of college,neutral,neutral,True,0.352,False,neutral
+101,this cleared up a lot of my confusion,neutral,positive,False,0.242,False,positive
+102,"ChatGPT got you an A; the welder got your girlfriend a vacation. .... In all seriousness though, I believe we are really focusing on the wrong AI dangers :D. I even did a Ted Talk on the topic (https://www.youtube.com/watch?v=lL5YhdjSSpI&t=10s)",neutral,negative,False,0.498,False,negative
+103,We're are the teachers .,neutral,neutral,True,0.108,False,neutral
+104,"NEWS: The growing role of generative AI in teaching and assessment was outlined in a January open letter from Queen’s, which acknowledged instructor uncertainty while rejecting a single, overarching AI policy. https://t.co/iiwiyLFL37",positive,neutral,False,0.462,False,neutral
+105,Chat Gpt helped me pass my Math Class 😂,positive,positive,True,0.028,False,positive
+106,this is kinda wild to see on campus,neutral,positive,False,0.621,True,negative
+107,"I don't think anyone knows. But even before AI, surveys found that over 60% of college students cheat regularly. I've certainly seen this in the classes I teach. For years I've almost given up on fighting it, but one of my colleagues decided to really crack down on cheating one semester. He ended up catching and failing just over half his class. Rather than being commended, he got chewed out by the department chair. Cheating has become an accepted norm. If you are a student, there is actually so",negative,positive,False,0.767,True,negative
+108,🍎 AI Fluency for Educators Designed for teachers &amp; trainers: • Responsible AI usage • Classroom integration • Curriculum design 👉 https://t.co/wx8CILTf3o,positive,neutral,False,0.26,False,neutral
+109,walter writes ai humanizer has been the game changer for me this semester,positive,positive,True,0.346,False,positive
+110,"Research Rabbit, Paperpal, Jenni,Avidnote, scispace",neutral,neutral,True,0.101,False,neutral
+111,"I had a teacher who had us do her lesson plans on the side board and would dare admin to come look. “If you’d like to interrupt my class I won’t stop you”. Looking back, she was so good she taught us how to teach, while simultaneously teaching English.",neutral,neutral,True,0.278,False,neutral
+112,@klosnj11 I don’t like the idea of discouraging high school students from collaborating with AI. They’re gonna have to do it at some point in your career. I assume that we test thinking by using in class testing.,positive,negative,False,0.477,False,negative
+113,AWS y Coursera ofrecen curso gratuito de aprendizaje automático para principiantes: 6 horas de contenido con Russell Sayers como instructor. https://t.co/CFVw1MUGFm,neutral,neutral,True,0.089,False,neutral
+114,How often do you use AI tools? Have your habits changed over time?,neutral,neutral,True,0.193,False,neutral
+115,kinda scary how reliant we are now,neutral,negative,False,0.055,False,negative
+116,Chatgpt is won because the ice cube is melting every side at the same time,neutral,neutral,True,0.422,False,neutral
+117,Talk about survival bias also present in this sinful tech,negative,negative,True,0.431,False,negative
+118,Teachers do more than teach. This might be a good thing lowering disappoinments and competition because these can be bad things for self esteem.,negative,neutral,False,0.639,True,neutral
+119,Bluebook essays in class. No digital anything.,negative,neutral,False,0.305,False,neutral
+120,Share me the link please,neutral,neutral,True,0.061,False,neutral
+121,People please stop drinking the ai kool-aid...have you not learned social media has impacted education and society,negative,negative,True,0.489,False,negative
+122,Fuck math get a calculator geez,neutral,negative,False,0.429,False,negative
+123,India tortures its students in the name of competition. AI is a tool in that process. Parents should take their children away from rat race if they want their progeny to stay healthy atleast in their 30s. The idea of entire life revolving around meaningless grades and exams with nothing worthy beibg learnt is destroying one whole generation. Sad,negative,negative,True,0.577,False,negative
+124,this is exactly what i needed right now,positive,positive,True,0.223,False,positive
+125,i need to try this for my next essay,positive,neutral,False,0.16,False,neutral
+126,"In this article, I explore how Agentic AI is reshaping education, the opportunities it creates, and the challenges institutions must address to build ethical and human-centered learning ecosystems.",neutral,neutral,True,0.489,False,neutral
+127,FOR REAL for what you asked perplexity at 9:53,neutral,neutral,True,0.025,False,neutral
+128,Join our instructor Jino Joseph for a live masterclass and uncover the prompting hacks that transform Microsoft 365 Copilot into your ultimate productivity partner. Save your spot today: https://t.co/otgJrBS1Ra #MicrosoftCopilot #PromptingTips #Microsoft365 #NetComLearning https://t.co/7ISYveDEnF,neutral,positive,False,0.104,False,positive
+129,Almost all my internal learners hate it and tank the engagement score. The ai voice is not the worse but the avatars draw universal hate even the director who pushed for it initially. We won’t dare to launch any of those content to external customer training yet.,negative,negative,True,0.481,False,negative
+130,"The problem with this picture is that we imagine that kids sit in a world where they are challenged enough that they can decide it is important to learn to learn .... (they need the ""why"" and most adults have no way to telling them a why?) So if you select kids that already know there is a benefit to learning you are not brave enough to face the really hard part of the problem.",neutral,negative,False,0.55,False,negative
+131,If you’re incapable of writing an essay you’re cooked bro. Go back to preschool and start all over again. You’re literally going to be flipping burgers for the rest of your life until that gets replaced by AI too 💀,negative,negative,True,0.272,False,negative
+132,The link is in the video description. You can check.,neutral,neutral,True,0.253,False,neutral
+133,"thank u for the tips, really needed this",neutral,positive,False,0.302,False,positive
+134,That's cool just figured out if you teach kids to be successful they will be successful problem solved in public schools,neutral,positive,False,0.249,False,positive
+135,"Bridging Pedagogy and Play: Introducing a Language Mapping Interface for Human-AI Co-Creation in Educational Game Design Daijin Yang, Erica Kleinman, Casper Harteveld https://t.co/UmsNBIb16w [𝚌𝚜.𝙷𝙲 𝚌𝚜.𝙰𝙸] https://t.co/uJCLORToPl",neutral,neutral,True,0.278,False,neutral
+136,"FREE COURSE GIVEAWAY People are earning $2,000-$20,000/Year by using GPT-4. So I built this Ultimate GPT-4 Course: • 50+ Chapters • 700+ No Code &amp; AI Tools • 1000+ GPT-4 Prompts To get it, 1. Follow @sumitdoriya21 2. RT this tweet 3. Reply ""GPT4"" **Only doing 750** https://t.co/gcR0c6p8y9",neutral,positive,False,0.363,False,positive
+137,@sumeetrm @jxmnop There’s some much to apply from traditional pedagogy to ML Great work!,positive,positive,True,0.021,False,positive
+138,He's correct tho u prolly got 7 IQ at max,neutral,neutral,True,0.215,False,neutral
+139,no app this is an 3D model features,neutral,neutral,True,0.217,False,neutral
+140,"Artificial Intelligence (AI) is used in cybersecurity to analyze vast amounts of data, detect anomalies, and identify potential threats. For example, Machine Learning is a subset of AI that is used to detect the Distributed Denial of Service (cyber attack). So in this attack, the main target of the attacker is to send multiple requests to the legitimate source to make it unavailable for authorized users. Machine Learning detects a DDOS attack by analyzing the nature of incoming traffic (packets)",neutral,neutral,True,0.683,True,neutral
+141,So I’m not the only one who gets a question wrong on purpose😅,neutral,negative,False,0.214,False,negative
+142,Ain't no way bro threatened chatGPT with a gun😂❤,neutral,neutral,True,0.213,False,neutral
+143,That foesnt work. Chat got has taken credit for it hasnt written. Colleges had to apologize,neutral,negative,False,0.134,False,negative
+144,"If I was a teacher here’s the assignment: Have chat gpt write up an essay on [whatever specific topic being taught], then grade it yourself and give it back to me. You can then grade how well they actually understand a topic… minus points for missing inaccuracies, must leave a cogent remarks on every paragraph, etc…",positive,neutral,False,0.317,False,neutral
+145,Harvard Astrophysicist Avi Loeb: Why UFOs May Be AI https://t.co/YQMbAc3cM2,neutral,neutral,True,0.069,False,neutral
+146,One way to get students to stop using AI is to use AI to bomb them.,negative,negative,True,0.338,False,negative
+147,"A mix of similar definitions generally involves a system with minimum human intervention to produce results based on input. There is, for example, machine learning, but there is also deep learning. AI can be used for many things, such as virtual assistants, chatbots, forecasting, etc.",neutral,neutral,True,0.457,False,neutral
+148,"Yeah, once you give a kid the answer they're not paying attention. Making our kids dumber, not smarter.",negative,negative,True,0.17,False,negative
+149,"GPT-4 passed the bar exam in the top 10% of test takers. Meanwhile, 40% of law school grads fail it on the first try. The robots aren't coming for your job — they're already billing by the hour. #AI #LLM #Automation",neutral,negative,False,0.453,False,negative
+150,"BALL TILL WE FALL, SWEAT FREE WINNER! Ball State ML (-135)✅💰 Back with a winner, and 3-1 in our last 4. Let's get hot! March is here, and so that means we gotta get on a roll for College Basketball! ❤️if you tailed this one!",neutral,positive,False,0.357,False,positive
+151,"never heard of these, gonna check them out",neutral,positive,False,0.092,False,positive
+152,"“If you use generative ai to write this paper, I will assume you want to dumb yourself down” I love this professor so much.",negative,negative,True,0.281,False,negative
+153,"That's preposterous and the whole class should be refunded at once. There's no place for AI in academics in such context, no matter who is using it.",negative,positive,False,0.612,True,negative
+154,apnar edit gula onk sundhor first into video ta ki ai dima make kora.?,neutral,neutral,True,0.073,False,neutral
+155,#AIinEducation #HigherEducation #ChangeManagement #AIAdoption #HumanCenteredDesign #FutureOfWork #AdaptiveLeadership #AILiteracy #DigitalTransformation #HigherEdLeadership,neutral,neutral,True,0.109,False,neutral
+156,The god of stupidity,negative,negative,True,0.19,False,negative
+157,how we get a lecture transcript,neutral,neutral,True,0.048,False,neutral
+158,AI generated slop,negative,positive,False,0.638,True,negative
+159,def need more ai on campus like fr,positive,neutral,False,0.235,False,neutral
+160,What kind of an idiot pays for an education and then goes out of their way to learn nothing from what they paid for? Whats the point,negative,negative,True,0.317,False,negative
+161,All this from a chatbot? gosh!!!!,neutral,negative,False,0.564,False,negative
+162,"@remarks Per Copilot: Do states without voter ID laws experience more fraud? No. Based on the most comprehensive public datasets and academic reviews, there is no evidence that states without voter ID laws experience more voter fraud than states with strict ID requirements.",neutral,negative,False,0.416,False,negative
+163,"You have to look at everything from every angle now and subtract the bullshit and come up with a viable conclusion of ""reality"" it's shitty it's come to that point idk if things can evolve forth sadly I see a mass of sheep being herded into by what mainstream media concludes as ""Fact"" because society's masses don't have time or the need for ""truth"" because living in these times family, business and the daily grind & problems everyone has is just too much to keep up with seeing through the hazy v",neutral,positive,False,0.791,True,negative
+164,Sounds like hell,negative,negative,True,0.066,False,negative
+165,Ill be honest gizmos good bht thea ai is just better,neutral,positive,False,0.319,False,positive
+166,"Funny how someone who got so many people interested in physics says he doesn't know how it's done. Of course you do. Great talk. I wouldn't worry too much, education is inevitable.",neutral,positive,False,0.124,False,positive
+167,I thought this was going to be a review of several language apps. It’s an inaccurate title and an advertisement for langua,neutral,negative,False,0.463,False,negative
+168,"Chief Strategy and Technology Officer @ Fulton County Schools | Leader | Keynote Speaker | Board Member | Creator of PLANT-AI, BOLT, Technology Adoption Framework, & PITAC | Retired Army Officer",neutral,neutral,True,0.205,False,neutral
+169,"I also would like to make a living writing, but I think ""creatives"" get a little too snotty thinking they're too good to be plumbers. A lot of the greats had to do other work to make ends meet, sometimes for their entire lives.",neutral,negative,False,0.423,False,negative
+170,Preach on brother! 👍,neutral,positive,False,0.073,False,positive
+171,Perfect app for learning during commute breaks.,neutral,positive,False,0.064,False,positive
+172,"AI tutors, the tireless educators of the future, are transforming education on a global scale, offering personalized learning experiences to a vast number of students simultaneously.",positive,positive,True,0.175,False,positive
+173,"I mean, who are we to argue with GROK in this particular instance? I think it's correct Thanks for the videos! <3",positive,positive,True,0.162,False,positive
+174,"Hello doctor Sarah Moore I would love to get in touch with you,your content was very insightful",neutral,positive,False,0.029,False,positive
+175,An ai company uses 5 million gallons of water in a single day and now theres only about 25k polar bears left. Stop ai,neutral,negative,False,0.54,False,negative
+176,To think that some people have to use ChatGPT on this question blows me away,negative,negative,True,0.277,False,negative
+177,This explanation was so smooth it needs a theme song.,neutral,positive,False,0.087,False,positive
+178,"If anyone needs more tools, there's a Telegram bot that suggests tools when you describe the task.",neutral,neutral,True,0.127,False,neutral
+179,"Once the students realize they can build Microsoft sized tech business ALONE using AI agents, all retarded educational faculties will perish to exist. 😂😂😂😂 so long suckers. Nobody needs your outdated indoctrination school system anymore. It’s already dead and you don’t know it yet. Hahahaha",negative,negative,True,0.436,False,negative
+180,Team gemini 👇,positive,neutral,False,0.415,False,neutral
+181,The European Union has taken decisions that only left technological creativity behind.I am pretty sure it is not about safety what they are doing but money.And not to let talented people and inventors advance in their fields,neutral,negative,False,0.252,False,negative
+182,All people make mistakes. THE CREATOR of AI is human. What makes you believe that you are not being deceived?,negative,neutral,False,0.207,False,neutral
+183,who knew there was so much diff?,neutral,neutral,True,0.099,False,neutral
+184,"@instablog9ja Mind you there is every word for the season,I basically got endeared to dl preaching more when I listened in January,As a s¢xual purity Advocate most of is teaching aligns with what I write about I just listen more for Femi oh the relationship expert all are priceless",neutral,positive,False,0.191,False,positive
+185,Stop freaking out we always had the answers. What is important is when you got those answers and did you learn it.,neutral,neutral,True,0.082,False,neutral
+186,This is great for AI which get ever smarter ... than humans.,neutral,positive,False,0.217,False,positive
+187,another low quality stating the obvious vidoe,neutral,negative,False,0.356,False,negative
+188,Whos here in 2026,neutral,neutral,True,0.088,False,neutral
+189,For 8months I have been using GPT-4 series for myself and also for school projects. It’s human like intelligence created a beautiful understanding which helped me in content creation also. Some useless organisations framing it with manipulation. #keep4o https://t.co/7s7ea04VNm,positive,positive,True,0.212,False,positive
+190,"Sounded good, but I did NOT any message from this into my brain. Felt like a bunch of people and English words. I remain confused at end. Sorry this is view.",neutral,positive,False,0.637,True,negative
+191,AI will replace teachers in the same way the internet did seems the luddites don't realize the tabloids have been talking about replacing jobs with machines for over a century 😂,positive,positive,True,0.637,True,negative
+192,"AI will parrot whatever data you train it on like its the gossible because it doesnt ""know"" any better, because it doesnt know anything. You need a actual brain in the room to teach students.",negative,negative,True,0.343,False,negative
+193,For me I can use it once,neutral,neutral,True,0.084,False,neutral
+194,this is so relevant right now,neutral,positive,False,0.102,False,positive
+195,Shout out to the dedicated heroes who impact students every single day. Thanks @JoshJohnson,neutral,positive,False,0.091,False,positive
+196,"The Felony in the Backpack: Why Your Child Should Never Unlock Their Phone at School (And, yes - It is Illegal for Schools to Rifle Through a Student's Cellphone) I was recently going through my Quora queue and stumbled on a very interesting question asking about parent and student rights regarding confiscated student property. Because of the intersection of innumerable legal issues surrounding property confiscation and criminal law, I felt it appropriate to provide a robust analysis. And, to to",neutral,neutral,True,0.784,True,neutral
+197,You can also go into File -> Options -> and edit your ribbon tabs there in PowerPoint,neutral,neutral,True,0.051,False,neutral
+198,"Some features create unnecessary burdens for people. It's frustrating that even when you write well, Turnitin flags it as AI-generated. I checked various tools: Quillbot: OK, Scispace: OK, Turnitin: NOT OK Quillbot: NOT OK, Scispace: OK, Turnitin: NOT OK Quillbot: OK, Scispace: NOT OK, Turnitin: NOT OK Quillbot: NOT OK, Scispace: OK, Turnitin: OK Quillbot: NOT OK, Scispace: NOT OK, Turnitin: OK Quillbot: OK, Scispace: NOT OK, Turnitin: NOT OK So, who can we really trust? It feels like we need to",neutral,positive,False,0.762,True,negative
+199,"Humans will have no knowledge, no intelligence, and no experience. If a kindergartner no longer has to learn to read or do math, which is where we are headed, then they won’t be “2 years ahead.” Future generations will be idiots.",negative,negative,True,0.31,False,negative
+200,thank you but i tried it and found it not as good as I though it will be,neutral,negative,False,0.125,False,negative

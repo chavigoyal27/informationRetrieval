@@ -1,0 +1,53 @@
+================================================================================
+FAST SARCASM DETECTOR - DETAILED REPORT
+Generated: 2026-04-07 03:18:05
+================================================================================
+
+SUMMARY
+----------------------------------------
+Test set size: 200 records
+Baseline (RoBERTa) Accuracy: 0.5350 (53.5%)
+Sarcasm Detector Accuracy: 0.5200 (52.0%)
+IMPROVEMENT: +-1.5%
+
+Sarcasm detected: 30 (15.0%)
+Sentiments adjusted: 18 (9.0%)
+
+CLASSIFICATION REPORT
+----------------------------------------
+              precision    recall  f1-score   support
+
+    Negative       0.43      0.70      0.53        37
+     Neutral       0.78      0.46      0.58       134
+    Positive       0.27      0.55      0.36        29
+
+    accuracy                           0.52       200
+   macro avg       0.49      0.57      0.49       200
+weighted avg       0.64      0.52      0.54       200
+
+EXAMPLES OF SARCASM DETECTION
+----------------------------------------
+
+1. Text: Experimental wildfire predictions made by AI algorithms have been remarkably accurate with less detection time. Software-defined cameras (SDCs) assist...
+   Sarcasm probability: 0.731
+   Base: positive → Final: negative
+
+2. Text: For this dumb woman now all the people who need help with ai will be fked...
+   Sarcasm probability: 0.704
+   Base: negative → Final: positive
+
+3. Text: Teachers and student both will get addicted to AI and stop putting efforts to develop their own body and brains in long term. Earlier human brains wer...
+   Sarcasm probability: 0.702
+   Base: negative → Final: positive
+
+4. Text: @LTX-x7r ai is worse for the environment than phones. Like what, do you want me to live in the woods scavenging for acorns or something??? I didn’t ev...
+   Sarcasm probability: 0.834
+   Base: negative → Final: positive
+
+5. Text: I’m assuming He’s melting down due to the amount student loans he’s still trying to pay off, on top of actually having to do the work and steady his a...
+   Sarcasm probability: 0.671
+   Base: negative → Final: positive
+
+================================================================================
+END OF REPORT
+================================================================================
