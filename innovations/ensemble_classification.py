@@ -30,7 +30,7 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from textblob import TextBlob
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
@@ -74,23 +74,33 @@ def normalize_label(label):
 
 def evaluate_deep_ensemble(texts, ground_truth):
 
-    print("Loading Deep Learning Sentiment Models...")
     model_defs = {
-        "M1_RoBERTa_Twitter": "cardiffnlp/twitter-roberta-base-sentiment-latest",
-        "M2_BERTweet":        "finiteautomata/bertweet-base-sentiment-analysis",
-        "M3_SieBERT":         "siebert/sentiment-roberta-large-english",
+        "M1_RoBERTa_Twitter": {
+            "path": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+            "max_length": 512,
+        },
+        "M2_BERTweet": {
+            "path": "finiteautomata/bertweet-base-sentiment-analysis",
+            "max_length": 128,
+        },
+        "M3_SieBERT": {
+            "path": "siebert/sentiment-roberta-large-english",
+            "max_length": 512,
+        },
     }
 
     pipes = {}
-    for name, path in model_defs.items():
+    for name, cfg in model_defs.items():
         print(f"  Loading {name}...")
+        tokenizer = AutoTokenizer.from_pretrained(cfg["path"])
         pipes[name] = pipeline(
             "text-classification",
-            model=path,
+            model=cfg["path"],
+            tokenizer=tokenizer,
             top_k=None,
             truncation=True,
-            max_length=512,
-            device=-1   # CPU
+            max_length=min(tokenizer.model_max_length, cfg["max_length"]),
+            device=-1
         )
 
     print(f"\nPreprocessing {len(texts)} texts...")
@@ -111,7 +121,12 @@ def evaluate_deep_ensemble(texts, ground_truth):
     if opinionated_texts:
         for name, pipe in pipes.items():
             print(f"  Inferencing {name} in batches...")
-            outputs = pipe(opinionated_texts, batch_size=16)
+            
+            if name == "M2_BERTweet":
+                outputs = pipe(opinionated_texts, batch_size=16, truncation=True, max_length=128)
+            else:
+                outputs = pipe(opinionated_texts, batch_size=16, truncation=True, max_length=512)
+                
             for raw_out in outputs:
                 arr = np.zeros(3)
                 for res in raw_out:
