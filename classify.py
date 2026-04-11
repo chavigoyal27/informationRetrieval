@@ -102,7 +102,7 @@ def load_polarity_model():
         top_k=None,        # Return all class probabilities, not just top-1
         max_length=512,
         truncation=True,
-        device=-1          # CPU; change to 0 for GPU
+        device=0          # CPU; change to 0 for GPU
     )
 
 

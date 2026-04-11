@@ -26,7 +26,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from textblob import TextBlob
@@ -206,14 +206,7 @@ def evaluate_deep_ensemble(texts, ground_truth):
     print(f"5. INNOVATION 2: Stacking Meta-Learner:          {acc_stack:.4f} ({acc_stack*100:.1f}%)")
     print("="*70)
 
-    # Detailed report for stacking
-    print("\nClassification Report (Stacking Meta-Learner):")
     num_to_label = {0: 'negative', 1: 'neutral', 2: 'positive'}
-    y_test_str   = [num_to_label[y] for y in y_test]
-    pred_str     = [num_to_label[p] for p in stacking_preds]
-    print(classification_report(y_test_str, pred_str,
-                                 labels=['positive', 'negative', 'neutral'],
-                                 digits=4))
 
     # Export full dataset predictions
     print(f"\nExporting predictions to data/analysis/stacked_ensemble_eval.csv...")

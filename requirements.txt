@@ -1,0 +1,17 @@
+pandas
+scikit-learn
+transformers
+torch
+emoji
+textblob
+xlrd
+openpyxl
+flask
+pysolr
+matplotlib
+wordcloud
+playwright
+ftfy
+google-api-python-client
+twikit
+vaderSentiment
