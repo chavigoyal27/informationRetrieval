@@ -37,7 +37,7 @@ sys.path.append(BASE_DIR)
 
 from preprocess import preprocess
 
-EVAL_FILE = os.path.join(BASE_DIR, "data", "final_corpus", "eval.xls")
+EVAL_FILE = os.path.join(BASE_DIR, "data", "final_corpus", "eval.xlsx")
 
 # Raised from 0.15 → 0.30 consistent with improved classify.py
 SUBJECTIVITY_THRESHOLD = 0.30
@@ -100,7 +100,7 @@ def evaluate_deep_ensemble(texts, ground_truth):
             top_k=None,
             truncation=True,
             max_length=min(tokenizer.model_max_length, cfg["max_length"]),
-            device=-1
+            device=0
         )
 
     print(f"\nPreprocessing {len(texts)} texts...")

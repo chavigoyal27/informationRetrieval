@@ -10722,7 +10722,7 @@ id,source,sentiment,compound,pos,neu,neg
 10721,Quora,positive,0.4767,0.149,0.756,0.096
 10722,Quora,negative,-0.3981,0.081,0.797,0.122
 10723,Quora,positive,0.101,0.099,0.772,0.129
-10724,Quora,neutral,-0.0,0.135,0.712,0.154
+10724,Quora,neutral,0.0,0.135,0.712,0.154
 10725,Quora,positive,0.9918,0.106,0.894,0.0
 10726,Quora,positive,0.9741,0.127,0.828,0.045
 10727,Quora,positive,0.9954,0.124,0.802,0.074
@@ -18321,7 +18321,7 @@ id,source,sentiment,compound,pos,neu,neg
 18320,Quora,negative,-0.9169,0.032,0.783,0.185
 18321,Quora,negative,-0.8885,0.052,0.857,0.091
 18322,Quora,neutral,-0.0266,0.128,0.762,0.11
-18323,Quora,positive,0.166,0.082,0.849,0.068
+18323,Quora,neutral,0.0,0.082,0.849,0.068
 18324,Quora,positive,0.9159,0.104,0.873,0.023
 18325,Quora,positive,0.9758,0.236,0.746,0.018
 18326,Quora,negative,-0.465,0.083,0.812,0.105
@@ -22694,7 +22694,7 @@ id,source,sentiment,compound,pos,neu,neg
 22693,Quora,positive,0.9133,0.209,0.725,0.065
 22694,Quora,neutral,0.0,0.0,1.0,0.0
 22695,Quora,negative,-0.877,0.064,0.687,0.248
-22696,Quora,neutral,-0.0,0.106,0.787,0.106
+22696,Quora,neutral,0.0,0.106,0.787,0.106
 22697,Quora,positive,0.9325,0.271,0.729,0.0
 22698,Quora,positive,0.9042,0.176,0.824,0.0
 22699,Quora,positive,0.9898,0.17,0.791,0.039
@@ -42385,7 +42385,7 @@ id,source,sentiment,compound,pos,neu,neg
 42384,YouTube,neutral,0.0,0.0,1.0,0.0
 42385,YouTube,positive,0.9468,0.379,0.432,0.189
 42386,YouTube,positive,0.3612,0.385,0.615,0.0
-42387,YouTube,neutral,0.0,0.138,0.688,0.174
+42387,YouTube,neutral,-0.0,0.138,0.688,0.174
 42388,YouTube,neutral,0.0,0.0,1.0,0.0
 42389,YouTube,positive,0.4215,0.583,0.417,0.0
 42390,YouTube,neutral,0.0,0.0,1.0,0.0
@@ -59975,7 +59975,7 @@ id,source,sentiment,compound,pos,neu,neg
 59974,YouTube,negative,-0.2023,0.087,0.799,0.115
 59975,YouTube,positive,0.4767,0.214,0.7,0.086
 59976,YouTube,positive,0.2057,0.142,0.858,0.0
-59977,YouTube,neutral,-0.0,0.161,0.679,0.161
+59977,YouTube,neutral,0.0,0.161,0.679,0.161
 59978,YouTube,negative,-0.8833,0.0,0.803,0.197
 59979,YouTube,positive,0.6486,0.306,0.694,0.0
 59980,YouTube,neutral,0.0,0.0,1.0,0.0
@@ -64602,10 +64602,10 @@ id,source,sentiment,compound,pos,neu,neg
 64601,Twitter,positive,0.8555,0.229,0.771,0.0
 64602,Twitter,positive,0.7703,0.184,0.816,0.0
 64603,Twitter,neutral,0.0,0.0,1.0,0.0
-64604,Twitter,neutral,0.0,0.184,0.68,0.136
-64605,Twitter,neutral,0.0,0.184,0.68,0.136
-64606,Twitter,neutral,0.0,0.194,0.663,0.143
-64607,Twitter,neutral,0.0,0.184,0.68,0.136
+64604,Twitter,neutral,-0.0,0.184,0.68,0.136
+64605,Twitter,neutral,-0.0,0.184,0.68,0.136
+64606,Twitter,neutral,-0.0,0.194,0.663,0.143
+64607,Twitter,neutral,-0.0,0.184,0.68,0.136
 64608,Twitter,positive,0.7102,0.244,0.67,0.086
 64609,Twitter,positive,0.8176,0.108,0.864,0.029
 64610,Twitter,negative,-0.5254,0.104,0.743,0.152
@@ -64704,7 +64704,7 @@ id,source,sentiment,compound,pos,neu,neg
 64703,Twitter,neutral,0.0258,0.124,0.772,0.104
 64704,Twitter,positive,0.6166,0.268,0.732,0.0
 64705,Twitter,negative,-0.3612,0.0,0.948,0.052
-64706,Twitter,neutral,0.0,0.136,0.742,0.121
+64706,Twitter,neutral,-0.0,0.136,0.742,0.121
 64707,Twitter,positive,0.7351,0.199,0.801,0.0
 64708,Twitter,negative,-0.2292,0.08,0.823,0.097
 64709,Twitter,negative,-0.5659,0.0,0.862,0.138

@@ -2,12 +2,12 @@
 Balance Corpus Generator
 =========================
 Builds two balanced versions of the master corpus by:
-  1. Removing all off-topic Quora records
-  2. Removing all positive Quora records
+    1. Removing all off-topic records across all sources
+    2. Removing all positive Quora records
   3. Downsampling remaining positive records to achieve target ratios
 
 Outputs:
-  - data/final_corpus/corpus_balanced_1to1.csv   (Scenario D — 1:1 pos/neg)
+    - data/final_corpus/corpus_balanced_1to1.csv   (Scenario D — 1:1:1 pos/neg/neu)
   - data/final_corpus/corpus_balanced_1.5to1.csv (Scenario E — 1.5:1 pos/neg)
 
 Usage:
@@ -95,18 +95,18 @@ def main():
     for r in rows:
         orig_sentiment[id(r)] = sentiment.get(r["id"], "neutral")
 
-    # Step 1: Remove off-topic Quora
+    # Step 1: Remove off-topic records across all sources
     # Step 2: Remove all positive Quora
     base = []
     for r in rows:
+        if r["id"] in off_topic_ids:
+            continue
         if r["source"] == "Quora":
-            if r["id"] in off_topic_ids:
-                continue
             if orig_sentiment[id(r)] == "positive":
                 continue
         base.append(r)
 
-    print(f"After removing off-topic + positive Quora: {len(base):,} records")
+    print(f"After removing off-topic (all sources) + positive Quora: {len(base):,} records")
 
     pos_rows = [r for r in base if orig_sentiment[id(r)] == "positive"]
     neg_rows = [r for r in base if orig_sentiment[id(r)] == "negative"]
@@ -114,12 +114,18 @@ def main():
 
     print(f"  pos={len(pos_rows):,}  neg={len(neg_rows):,}  neu={len(neu_rows):,}")
 
-    # Scenario D: 1:1 ratio
-    sampled_d = random.sample(pos_rows, len(neg_rows))
-    kept_d = sampled_d + neg_rows + neu_rows
+    # Scenario D: full 3-class balance (1:1:1)
+    target_per_class = min(len(pos_rows), len(neg_rows), len(neu_rows))
+    if target_per_class == 0:
+        raise ValueError("Cannot build 3-class balanced dataset: one of the classes has 0 rows.")
+
+    sampled_pos_d = random.sample(pos_rows, target_per_class)
+    sampled_neg_d = random.sample(neg_rows, target_per_class)
+    sampled_neu_d = random.sample(neu_rows, target_per_class)
+    kept_d = sampled_pos_d + sampled_neg_d + sampled_neu_d
     random.shuffle(kept_d)
     write_corpus(OUTPUT_D, kept_d)
-    print_stats(f"Scenario D (1:1) -> {OUTPUT_D}", kept_d, sentiment, orig_sentiment)
+    print_stats(f"Scenario D (1:1:1) -> {OUTPUT_D}", kept_d, sentiment, orig_sentiment)
 
     # Scenario E: 1.5:1 ratio
     target_pos = int(len(neg_rows) * 1.5)

@@ -1,17 +1,20 @@
-#Annotation Sheet Extractor
-#randomly samples 1000 records from corpus_balanced_1to1.csv
-#exports CSV
+"""Annotation Sheet Extractor.
+
+Randomly samples 1,200 records from the filtered balanced corpus and writes
+annotation_sheet.csv in the same folder.
+"""
 
 import csv
 import random
 import os
 
-random.seed(42)  # fixed seed so everyone gets the same 1000 records
+random.seed(42)  # fixed seed so everyone gets the same 1,200 records
 
-INPUT_FILE = "corpus_balanced_1to1.csv"   
-OUTPUT_FILE = "annotation_sheet.csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INPUT_FILE = os.path.join(BASE_DIR, "corpus_balanced_1to1.csv")
+OUTPUT_FILE = os.path.join(BASE_DIR, "annotation_sheet.csv")
 
-SAMPLE_SIZE = 1000
+SAMPLE_SIZE = 1200
 
 def main():
     print("Reading corpus...")
@@ -22,7 +25,7 @@ def main():
 
     print(f"Total records available: {len(rows):,}")
 
-    # Sample 1000 records
+    # Sample 1200 records
     sampled = random.sample(rows, min(SAMPLE_SIZE, len(rows)))
 
     print(f"Sampled {len(sampled)} records")
@@ -55,7 +58,7 @@ def main():
             })
 
     print(f"\nDone! Saved to: {OUTPUT_FILE}")
-    print(f"Upload {OUTPUT_FILE} to Google Sheets and share with your team.")
+    print("Upload annotation_sheet.csv to Google Sheets and share with your team.")
 
 if __name__ == "__main__":
     main()

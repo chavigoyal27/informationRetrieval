@@ -118,7 +118,7 @@ A data quality analysis revealed two issues:
 1. **Topical relevance:** Only 51.8% of records mentioned both AI and education keywords. Quora had the lowest relevance rate at 30.5%.
 2. **Sentiment skew:** 65.2% of records were positive, 20.4% negative, and 14.4% neutral.
 
-To address both issues, we removed all off-topic Quora records and all positive Quora records, then downsampled the remaining positive records to achieve a 1:1 positive-to-negative ratio. The resulting balanced corpus (`data/final_corpus/corpus_balanced_1to1.csv`) contains 28,664 records and 1,108,322 words.
+To address both issues, we remove all off-topic records across all sources, remove positive Quora records, and then downsample the remaining positive records to achieve a 1:1 positive-to-negative ratio. The resulting balanced corpus is written to `data/final_corpus/corpus_balanced_1to1.csv`.
 
 ### 1.2 Applications and sample queries
 
@@ -323,7 +323,7 @@ Our preprocessing steps:
 
 ### 4.3 Evaluation dataset
 
-We manually labeled **1,000 records** using **3 annotators** with an annotation sheet (`data/final_corpus/annotation_sheet.csv`). Each annotator independently labeled records as positive, negative, or neutral. The final label was determined by majority vote. The consensus dataset was exported to `data/final_corpus/eval.xls`.
+We manually labeled **1,000 records** using **3 annotators** with an annotation sheet (`data/final_corpus/annotation_sheet.csv`). The sheet is generated from the filtered balanced corpus by running `python data/final_corpus/sample_eval_dataset.py` after `python tools/balance_corpus.py`. Each annotator independently labeled records as positive, negative, or neutral. The final label was determined by majority vote. The consensus dataset was exported to `data/final_corpus/eval.xls`.
 
 **Inter-annotator agreement: 82.8%** (pairwise, exceeds the 80% threshold). Full agreement (3/3) was reached on 74.2% of records; majority agreement (2/3) on the remaining 25.8%.
 
@@ -409,6 +409,9 @@ python preprocess.py
 
 # Balance the corpus (1:1 positive/negative ratio)
 python tools/balance_corpus.py
+
+# Generate annotation sheet from the filtered balanced corpus
+python data/final_corpus/sample_eval_dataset.py
 ```
 
 ### Step 2: Classify the corpus
